@@ -49,13 +49,22 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
     e.preventDefault()
     setIsLoading(true)
     setError("")
-
-    // In a real app, this would call an API to save the blog post
-    setTimeout(() => {
-      // Simulate success
+    const formData = new FormData(e.currentTarget)
+    const data = Object.fromEntries(formData.entries())
+    data.image = imageUrl
+    try {
+      const res = await fetch(isEditing ? `/api/blog-posts/${post?.id}` : "/api/blog-posts", {
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error("Failed to save post")
       router.push("/admin/blog")
+    } catch (err: any) {
+      setError(err.message || "Unknown error")
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

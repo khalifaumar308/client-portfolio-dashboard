@@ -1,79 +1,35 @@
+"use client"
+
 import Link from "next/link"
 import { FileText, Plus } from "lucide-react"
+import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BlogPostsTable } from "@/components/admin/blog-posts-table"
 
-export const metadata = {
-  title: "Blog Management | Admin Dashboard",
-  description: "Manage blog posts and articles",
-}
-
 export default function BlogPage() {
-  // Mock data
-  const posts = [
-    {
-      id: "1",
-      title: "The Future of Fintech Regulation",
-      slug: "/blog/future-of-fintech-regulation",
-      date: "May 10, 2023",
-      category: "Regulation",
-      readTime: "5 min read",
-      excerpt: "Exploring the evolving landscape of fintech regulation and its implications for the industry.",
-      content: "Full content of the blog post...",
-      image: "/fintech-concept.png",
-      author: "Samuel Johnson",
-    },
-    {
-      id: "2",
-      title: "Blockchain in Financial Services",
-      slug: "/blog/blockchain-in-financial-services",
-      date: "April 22, 2023",
-      category: "Technology",
-      readTime: "8 min read",
-      excerpt: "How blockchain technology is transforming the financial services industry.",
-      content: "Full content of the blog post...",
-      image: "/interconnected-blocks.png",
-      author: "Samuel Johnson",
-    },
-    {
-      id: "3",
-      title: "Digital Banking Trends for 2023",
-      slug: "/blog/digital-banking-trends-2023",
-      date: "March 15, 2023",
-      category: "Banking",
-      readTime: "6 min read",
-      excerpt: "The top digital banking trends that will shape the industry in 2023.",
-      content: "Full content of the blog post...",
-      image: "/digital-banking-app.png",
-      author: "Samuel Johnson",
-    },
-    {
-      id: "4",
-      title: "Financial Inclusion Through Technology",
-      slug: "/blog/financial-inclusion-through-technology",
-      date: "February 28, 2023",
-      category: "Inclusion",
-      readTime: "7 min read",
-      excerpt: "How technology is helping to bridge the gap in financial inclusion.",
-      content: "Full content of the blog post...",
-      image: "/financial-inclusion.png",
-      author: "Samuel Johnson",
-    },
-    {
-      id: "5",
-      title: "The Rise of Embedded Finance",
-      slug: "/blog/rise-of-embedded-finance",
-      date: "January 12, 2023",
-      category: "Innovation",
-      readTime: "4 min read",
-      excerpt: "Understanding the growing trend of embedded finance and its impact on the industry.",
-      content: "Full content of the blog post...",
-      image: "/embedded-finance-concept.png",
-      author: "Samuel Johnson",
-    },
-  ]
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchPosts() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch("/api/blog-posts")
+        if (!res.ok) throw new Error("Failed to fetch blog posts")
+        const data = await res.json()
+        setPosts(data)
+      } catch (err: any) {
+        setError(err.message || "Unknown error")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPosts()
+  }, [])
 
   // Mock categories
   const categories = [
@@ -108,35 +64,50 @@ export default function BlogPage() {
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{posts.length}</div>
-            <p className="text-xs text-muted-foreground">{posts.length === 1 ? "Post" : "Posts"} published</p>
-          </CardContent>
-        </Card>
+      {error && <div className="text-red-500">{error}</div>}
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{posts.length}</div>
+                <p className="text-xs text-muted-foreground">{posts.length === 1 ? "Post" : "Posts"} published</p>
+              </CardContent>
+            </Card>
 
-        {categories.slice(0, 3).map((category) => (
-          <Card key={category.slug}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">{category.name}</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{categoryCounts[category.name] || 0}</div>
-              <p className="text-xs text-muted-foreground">
-                {categoryCounts[category.name] === 1 ? "Post" : "Posts"} in this category
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            {categories.slice(0, 3).map((category) => (
+              <Card key={category.slug}>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">{category.name}</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{categoryCounts[category.name] || 0}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {categoryCounts[category.name] === 1 ? "Post" : "Posts"} in this category
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-      <BlogPostsTable posts={posts} />
+          <BlogPostsTable posts={posts} onDelete={async (id: string) => {
+            // Call DELETE API
+            const res = await fetch(`/api/blog-posts/${id}`, { method: "DELETE" })
+            if (res.ok) {
+              setPosts((prev) => prev.filter((p: any) => p._id !== id && p.id !== id))
+            } else {
+              alert("Failed to delete post")
+            }
+          }} />
+        </>
+      )}
     </div>
   )
 }

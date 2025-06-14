@@ -86,13 +86,15 @@ export default function AdminLayout({
               </Button>
             </div>
           </header>
-          <div className="flex-1 items-start md:grid md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <aside className="fixed hidden h-[calc(100vh-4rem)] w-[220px] border-r md:block lg:w-[280px]">
+          <div className="flex-1 flex flex-row min-h-0">
+            {/* Sidebar */}
+            <aside className="hidden md:flex md:flex-col md:relative md:w-[220px] lg:w-[280px] border-r">
               <div className="flex h-full flex-col gap-2 p-4">
                 <AdminSidebar />
               </div>
             </aside>
-            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 md:pl-[calc(220px+2rem)] lg:pl-[calc(280px+2rem)]">
+            {/* Main content */}
+            <main className="flex-1 flex flex-col gap-4 p-4 md:gap-8 md:p-8 overflow-x-auto bg-background">
               {children}
             </main>
           </div>

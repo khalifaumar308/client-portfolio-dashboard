@@ -41,9 +41,10 @@ interface BlogPost {
 
 interface BlogPostsTableProps {
   posts: BlogPost[]
+  onDelete?: (id: string) => void
 }
 
-export function BlogPostsTable({ posts }: BlogPostsTableProps) {
+export function BlogPostsTable({ posts, onDelete }: BlogPostsTableProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null)
 
@@ -54,14 +55,10 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
 
   const handleDeleteConfirm = async () => {
     if (postToDelete) {
-      // In a real app, this would call an API to delete the post
-      console.log("Deleting post:", postToDelete.id)
-
-      // For demo purposes, we'll just close the dialog
+      if (onDelete) {
+        await onDelete(postToDelete.id)
+      }
       setIsDeleteDialogOpen(false)
-
-      // In a real app, you would refresh the data here
-      // window.location.reload()
     }
   }
 
