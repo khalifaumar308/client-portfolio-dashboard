@@ -51,29 +51,9 @@ const sidebarItems = [
     icon: <MessageSquare className="h-5 w-5" />,
   },
   {
-    title: "Stats",
-    href: "/admin/stats",
-    icon: <BarChart className="h-5 w-5" />,
-  },
-  {
-    title: "Media",
-    href: "/admin/media",
-    icon: <ImageIcon className="h-5 w-5" />,
-  },
-  {
     title: "Homepage",
     href: "/admin/homepage",
     icon: <Home className="h-5 w-5" />,
-  },
-  {
-    title: "Users",
-    href: "/admin/users",
-    icon: <Users className="h-5 w-5" />,
-  },
-  {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: <Settings className="h-5 w-5" />,
   },
 ]
 

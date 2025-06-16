@@ -18,12 +18,6 @@ export async function submitContactForm(formData: ContactFormData) {
     // Validate the form data
     const validatedData = contactFormSchema.parse(formData)
 
-    // In a real implementation, you would:
-    // 1. Send an email notification
-    // 2. Store the contact request in a database
-    // 3. Set up email automation for responses
-
-    // For now, we'll just simulate a successful submission
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     return { success: true, message: "Message received! I'll get back to you soon." }

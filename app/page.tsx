@@ -14,6 +14,8 @@ import { HomepageServices } from "@/components/homepage-services"
 import { HomepageTestimonials } from "@/components/homepage-testimonials"
 import { HomepageBlogPosts } from "@/components/homepage-blog-posts"
 import { getHomepageData } from "@/lib/api"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 export const metadata = {
   title: "Samuel Johnson | Fintech Consultant & Business Advisor",
@@ -48,6 +50,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Header />
       {/* Hero Section */}
       <section className="relative w-full py-20 md:py-28 lg:py-36 overflow-hidden">
         <AnimatedGradient />
@@ -59,7 +62,8 @@ export default async function Home() {
               </div>
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none">
-                  {homepageData.hero.title} <span className="text-primary">{homepageData.hero.subtitle}</span>
+                  {homepageData.hero.title}{" "}
+                  <span className="text-primary">{homepageData.hero.subtitle}</span>
                 </h1>
                 <p className="max-w-[600px] text-muted-foreground text-lg md:text-xl">
                   {homepageData.hero.description}
@@ -404,6 +408,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   )
 }
