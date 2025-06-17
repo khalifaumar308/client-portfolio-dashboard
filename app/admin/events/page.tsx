@@ -5,13 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EventsTable } from "@/components/admin/events-table"
+import { getAllEvents } from "@/lib/admin-actions/event"
 
 export const metadata = {
   title: "Events Management | Admin Dashboard",
   description: "Manage events and speaking engagements",
 }
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const events = await getAllEvents()
+  console.log("Fetched events:", events)
   // Mock data
   const upcomingEvents = [
     {

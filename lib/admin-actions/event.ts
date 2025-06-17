@@ -1,37 +1,36 @@
-import Event from '../models/Event'
-import mongoose from 'mongoose'
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/porpolio'
-
-async function dbConnect() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI)
-  }
-}
+'use server'
+import { revalidatePath } from 'next/cache'
+import { connectToMongoDB } from '../models/connectDB'
+import Event, { IEvent, NewEvent } from '../models/Event'
 
 export async function getAllEvents() {
-  await dbConnect()
-  return Event.find().lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Event.find().lean())) as IEvent[]
 }
 
 export async function getEventById(id: string) {
-  await dbConnect()
-  return Event.findById(id).lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Event.findById(id).lean())) as IEvent | null
 }
 
-export async function createEvent(data: any) {
-  await dbConnect()
-  const event = new Event(data)
+export async function addEvent(prevState: any, formData: FormData) {
+  const eventForm = Object.fromEntries(formData.entries()).event as string
+  const finalEvent = JSON.parse(eventForm) as NewEvent
+  // if (!finalEvent || !finalEvent.title || !finalEvent.date || !finalEvent.type || !finalEvent.role || !finalEvent.eventUrl || !finalEvent.image) {
+  //   throw new Error("Missing required fields: title, date, type, role, eventUrl, or image")
+  // }
+  await connectToMongoDB()
+  const event = new Event(finalEvent)
   await event.save()
-  return event.toObject()
+  revalidatePath('/admin/events')
 }
 
-export async function updateEvent(id: string, data: any) {
-  await dbConnect()
-  return Event.findByIdAndUpdate(id, data, { new: true }).lean()
+export async function updateEvent(id: string, data: Partial<IEvent>) {
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Event.findByIdAndUpdate(id, data, { new: true }).lean())) as IEvent | null
 }
 
 export async function deleteEvent(id: string) {
-  await dbConnect()
-  return Event.findByIdAndDelete(id).lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Event.findByIdAndDelete(id).lean())) as IEvent | null
 }

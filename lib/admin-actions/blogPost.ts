@@ -1,37 +1,48 @@
-import BlogPost from '../models/BlogPost'
+'use server'
+import BlogPost, { IBlogPost } from '../models/BlogPost'
 import mongoose from 'mongoose'
+import { connectToMongoDB } from '../models/connectDB'
+import { revalidatePath } from 'next/cache'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/porpolio'
-
-async function dbConnect() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI)
-  }
-}
 
 export async function getAllBlogPosts() {
-  await dbConnect()
+  await connectToMongoDB()
   return BlogPost.find().lean()
 }
 
 export async function getBlogPostById(id: string) {
-  await dbConnect()
+  await connectToMongoDB()
   return BlogPost.findById(id).lean()
 }
 
-export async function createBlogPost(data: any) {
-  await dbConnect()
-  const post = new BlogPost(data)
+export async function createBlogPostT(prevState: any, formData: FormData) {
+  const blogForm = Object.fromEntries(formData.entries()).blog as string
+  const finalblog = JSON.parse(blogForm) as IBlogPost
+
+  await connectToMongoDB()
+  const post = new BlogPost(finalblog)
   await post.save()
-  return post.toObject()
+  revalidatePath('/admin/blog')
 }
 
+// export async function addEvent(prevState: any, formData: FormData) {
+//   const eventForm = Object.fromEntries(formData.entries()).event as string
+//   const finalEvent = JSON.parse(eventForm) as NewEvent
+//   // if (!finalEvent || !finalEvent.title || !finalEvent.date || !finalEvent.type || !finalEvent.role || !finalEvent.eventUrl || !finalEvent.image) {
+//   //   throw new Error("Missing required fields: title, date, type, role, eventUrl, or image")
+//   // }
+//   await connectToMongoDB()
+//   const event = new Event(finalEvent)
+//   await event.save()
+//   revalidatePath('/admin/events')
+// }
+
 export async function updateBlogPost(id: string, data: any) {
-  await dbConnect()
+  await connectToMongoDB()
   return BlogPost.findByIdAndUpdate(id, data, { new: true }).lean()
 }
 
 export async function deleteBlogPost(id: string) {
-  await dbConnect()
+  await connectToMongoDB()
   return BlogPost.findByIdAndDelete(id).lean()
 }

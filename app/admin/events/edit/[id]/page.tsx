@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { EventForm } from "@/components/admin/event-form"
+import { getEventById } from "@/lib/admin-actions/event"
 
 export const metadata = {
   title: "Edit Event | Admin Dashboard",
@@ -16,22 +17,25 @@ interface EditEventPageProps {
   }
 }
 
-export default function EditEventPage({ params }: EditEventPageProps) {
-  // In a real app, this would fetch the event from an API
-  // For demo purposes, we'll use mock data
+export default async function EditEventPage({ params }: EditEventPageProps) {
+  const event = await getEventById(params.id)
+  if (!event) {
+    // If the event is not found, return a 404 page
+    return notFound()
+  }
 
   // Mock event data
-  const event = {
-    id: params.id,
-    title: "Fintech Summit 2023",
-    description: "A major fintech industry event focusing on the latest trends and innovations.",
-    date: "June 15, 2023",
-    location: "New York, USA",
-    type: "Conference",
-    role: "Keynote Speaker",
-    eventUrl: "https://example.com/event1",
-    image: "/fintech-workshop.png",
-  }
+  // const event = {
+  //   id: params.id,
+  //   title: "Fintech Summit 2023",
+  //   description: "A major fintech industry event focusing on the latest trends and innovations.",
+  //   date: "June 15, 2023",
+  //   location: "New York, USA",
+  //   type: "Conference",
+  //   role: "Keynote Speaker",
+  //   eventUrl: "https://example.com/event1",
+  //   image: "/fintech-workshop.png",
+  // }
 
   // Mock data for event types and roles
   const eventTypes = [
@@ -74,7 +78,7 @@ export default function EditEventPage({ params }: EditEventPageProps) {
         </div>
       </div>
 
-      <EventForm event={event} eventTypes={eventTypes} eventRoles={eventRoles} />
+      <EventForm event={event!} eventTypes={eventTypes} eventRoles={eventRoles} />
     </div>
   )
 }
