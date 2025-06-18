@@ -3,13 +3,15 @@ import { EventCard } from "@/components/event-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { getAllEvents } from "@/lib/admin-actions/event"
 
 interface EventsListProps {
   type: "upcoming" | "past"
 }
 
 export async function EventsList({ type }: EventsListProps) {
-  const events = type === "upcoming" ? await getUpcomingEvents() : await getPastEvents()
+  const allEvents = await getAllEvents()
+  const events = type === "upcoming" ? allEvents.filter((event) => new Date(event.date) >= new Date()) : allEvents.filter((event) => new Date(event.date) < new Date())
 
   if (events.length === 0 && type === "upcoming") {
     return (
@@ -28,7 +30,7 @@ export async function EventsList({ type }: EventsListProps) {
   return (
     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <EventCard key={event._id} event={event} />
       ))}
     </div>
   )

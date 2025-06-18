@@ -3,6 +3,7 @@ import BlogPost, { IBlogPost } from '../models/BlogPost'
 import mongoose from 'mongoose'
 import { connectToMongoDB } from '../models/connectDB'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 
 export async function getAllBlogPosts() {
@@ -16,13 +17,17 @@ export async function getBlogPostById(id: string) {
 }
 
 export async function createBlogPostT(prevState: any, formData: FormData) {
+
   const blogForm = Object.fromEntries(formData.entries()).blog as string
   const finalblog = JSON.parse(blogForm) as IBlogPost
-
+  console.log(finalblog, 'finalblog in createBlogPostT')
+  const date = new Date(finalblog.date)
   await connectToMongoDB()
-  const post = new BlogPost(finalblog)
+  const post = new BlogPost({...finalblog, date: date.toLocaleDateString() })
   await post.save()
   revalidatePath('/admin/blog')
+  redirect('/admin/blog')
+  return 'Blog post created successfully'
 }
 
 // export async function addEvent(prevState: any, formData: FormData) {

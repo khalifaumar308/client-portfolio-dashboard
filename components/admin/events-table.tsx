@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 interface Event {
-  id: string
+  _id: string
   title: string
   date: string
   location: string
@@ -54,7 +54,7 @@ export function EventsTable({ events }: EventsTableProps) {
   const handleDeleteConfirm = async () => {
     if (eventToDelete) {
       // In a real app, this would call an API to delete the event
-      console.log("Deleting event:", eventToDelete.id)
+      console.log("Deleting event:", eventToDelete._id)
 
       // For demo purposes, we'll just close the dialog
       setIsDeleteDialogOpen(false)
@@ -87,7 +87,7 @@ export function EventsTable({ events }: EventsTableProps) {
               </TableRow>
             ) : (
               events.map((event) => (
-                <TableRow key={event.id}>
+                <TableRow key={event._id}>
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell>
                     <div className="flex items-center">
@@ -118,7 +118,7 @@ export function EventsTable({ events }: EventsTableProps) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
-                          <Link href={`/admin/events/edit/${event.id}`}>
+                          <Link href={`/admin/events/edit/${event._id}`}>
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </Link>

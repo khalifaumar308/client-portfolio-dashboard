@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import BlogFormServer from "./forms/blog.form"
 
 interface Category {
   name: string
@@ -42,46 +43,58 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [imageUrl, setImageUrl] = useState(post?.image || "")
+  const [finalBlog, setFinalBlog] = useState<BlogPost >(post || {
+    id: "",
+    title: "",
+    slug: "",
+    date: "",
+    category: categories[0]?.value || "",
+    readTime: "",
+    excerpt: "",
+    content: "",
+    image: "my Image",
+    author: "",
+  })
 
   const isEditing = !!post
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
-    const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
-    data.image = imageUrl
-    try {
-      const res = await fetch(isEditing ? `/api/blog-posts/${post?.id}` : "/api/blog-posts", {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error("Failed to save post")
-      router.push("/admin/blog")
-    } catch (err: any) {
-      setError(err.message || "Unknown error")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  // async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault()
+  //   setIsLoading(true)
+  //   setError("")
+  //   const formData = new FormData(e.currentTarget)
+  //   const data = Object.fromEntries(formData.entries())
+  //   data.image = imageUrl
+  //   try {
+  //     const res = await fetch(isEditing ? `/api/blog-posts/${post?.id}` : "/api/blog-posts", {
+  //       method: isEditing ? "PUT" : "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(data),
+  //     })
+  //     if (!res.ok) throw new Error("Failed to save post")
+  //     router.push("/admin/blog")
+  //   } catch (err: any) {
+  //     setError(err.message || "Unknown error")
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0]
+  //   if (!file) return
 
-    // In a real app, this would upload the file to a storage service
-    // For demo purposes, we'll just use a placeholder
-    setImageUrl("/blog-concept.png")
-  }
+  //   // In a real app, this would upload the file to a storage service
+  //   // For demo purposes, we'll just use a placeholder
+  //   setImageUrl("/blog-concept.png")
+  // }
 
-  const handleRemoveImage = () => {
-    setImageUrl("")
-  }
+  // const handleRemoveImage = () => {
+  //   setImageUrl("")
+  // }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
+    <div className="space-y-8">
       <Card>
         <CardContent className="pt-6">
           <div className="grid gap-6">
@@ -91,7 +104,8 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
                 id="title"
                 name="title"
                 placeholder="Enter blog post title"
-                defaultValue={post?.title || ""}
+                value={finalBlog.title}
+                onChange={(e) => setFinalBlog({ ...finalBlog, title: e.target.value })}
                 required
               />
             </div>
@@ -102,7 +116,8 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
                 id="excerpt"
                 name="excerpt"
                 placeholder="Enter a short excerpt"
-                defaultValue={post?.excerpt || ""}
+                value={finalBlog.excerpt}
+                onChange={(e) => setFinalBlog({ ...finalBlog, excerpt: e.target.value })}
                 required
                 className="min-h-[80px]"
               />
@@ -114,7 +129,8 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
                 id="content"
                 name="content"
                 placeholder="Enter blog post content"
-                defaultValue={post?.content || ""}
+                value={finalBlog.content}
+                onChange={(e) => setFinalBlog({ ...finalBlog, content: e.target.value })}
                 required
                 className="min-h-[200px]"
               />
@@ -123,7 +139,7 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="grid gap-3">
                 <Label htmlFor="category">Category</Label>
-                <Select name="category" defaultValue={post?.category || categories[0]?.value}>
+                <Select name="category" value={finalBlog.category} onValueChange={(value) => setFinalBlog({ ...finalBlog, category: value })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
@@ -143,7 +159,8 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
                   id="readTime"
                   name="readTime"
                   placeholder="e.g. 5 min read"
-                  defaultValue={post?.readTime || ""}
+                  value={finalBlog.readTime}
+                  onChange={(e) => setFinalBlog({ ...finalBlog, readTime: e.target.value })}
                   required
                 />
               </div>
@@ -151,7 +168,7 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
 
             <div className="grid gap-3">
               <Label>Featured Image</Label>
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 {imageUrl ? (
                   <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
                     <Image src={imageUrl || "/placeholder.svg"} alt="Blog post image" fill className="object-cover" />
@@ -187,7 +204,7 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
                     </Button>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </CardContent>
@@ -196,14 +213,8 @@ export function BlogPostForm({ categories, post }: BlogPostFormProps) {
       {error && <div className="text-sm font-medium text-destructive">{error}</div>}
 
       <div className="flex gap-4">
-        <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? (isEditing ? "Updating..." : "Creating...") : isEditing ? "Update Post" : "Create Post"}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => router.push("/admin/blog")}>
-          Cancel
-        </Button>
+        <BlogFormServer blog={{ ...finalBlog, image: imageUrl }} />
       </div>
-    </form>
+    </div>
   )
 }

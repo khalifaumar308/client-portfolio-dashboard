@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 export interface IEvent {
   title: string;
   date: string;
-  location?: string
+  location: string
   description: string
   type: string;
   role: string;
@@ -15,7 +15,7 @@ export interface IEvent {
 export interface NewEvent{
   title: string;
   date: string;
-  location?: string
+  location: string
   description: string
   type: string;
   role: string;
@@ -26,8 +26,8 @@ export interface NewEvent{
 const EventSchema = new mongoose.Schema<IEvent>({
   title: { type: String, required: true },
   date: { type: String, required: true },
-  location: { type: String },
-  description: { type: String },
+  location: { type: String, required: true },
+  description: { type: String, required: true },
   type: { type: String, required: true },
   role: { type: String, required: true },
   eventUrl: { type: String, required: true },

@@ -50,6 +50,7 @@
     "lucide-react": "^0.454.0",
     "mongoose": "^8.15.2",
     "next": "15.2.4",
+    "next-cloudinary": "^6.16.0",
     "next-themes": "latest",
     "react": "^19",
     "react-day-picker": "latest",

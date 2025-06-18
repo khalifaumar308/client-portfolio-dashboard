@@ -8,7 +8,7 @@ import { Upload, X, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { uploadImage } from "@/lib/admin-actions"
+// import { uploadImage } from "@/lib/admin-actions"
 
 interface ImageUploadProps {
   currentImage?: string
@@ -40,7 +40,8 @@ export function ImageUpload({ currentImage, onImageUploaded }: ImageUploadProps)
     setError("")
 
     try {
-      const imageUrl = await uploadImage(file)
+      // const imageUrl = await uploadImage(file)
+      const imageUrl = URL.createObjectURL(file) // For demo purposes, replace with actual upload logic
       setImage(imageUrl)
       onImageUploaded(imageUrl)
     } catch (error) {

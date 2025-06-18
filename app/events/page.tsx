@@ -14,7 +14,8 @@ import { TestimonialsLoading } from "@/components/testimonials-loading"
 import { EventsList } from "@/components/events-list"
 import { SpeakingTopics } from "@/components/speaking-topics"
 import { EventTestimonials } from "@/components/event-testimonials"
-import { getUpcomingEvents, getEventTypes, getEventRoles } from "@/lib/api"
+import { getEventTypes, getEventRoles } from "@/lib/api"
+import { getAllEvents } from "@/lib/admin-actions/event"
 
 export const metadata = {
   title: "Events & Speaking | Samuel Johnson",
@@ -23,12 +24,58 @@ export const metadata = {
 
 export default async function EventsPage() {
   // Fetch data in parallel
-  const [upcomingEventsData, eventTypesData, eventRolesData] = await Promise.all([
-    getUpcomingEvents(),
+  const [allEvents, eventTypesData, eventRolesData] = await Promise.all([
+    getAllEvents(),
     getEventTypes(),
     getEventRoles(),
   ])
 
+  // Filter and sort events
+  const upcomingEventsData = allEvents
+    .filter((event) => {
+      const eventDate = new Date(event.date)
+      const today = new Date()
+      return eventDate >= today
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map((event) => ({
+      id: event._id,
+      title: event.title,
+      date: new Date(event.date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+      location: event.location,
+      type: event.type,
+      role: event.role,
+      eventUrl: event.eventUrl,
+      image: event.image || "/placeholder.svg",
+      description: event.description,
+    }))
+  const pastEventsData = allEvents
+    .filter((event) => {
+      const eventDate = new Date(event.date)
+      const today = new Date()
+      return eventDate < today
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((event) => ({
+      id: event._id,
+      title: event.title,
+      date: new Date(event.date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+      location: event.location,
+      type: event.type,
+      role: event.role,
+      eventUrl: event.eventUrl,
+      image: event.image || "/placeholder.svg",
+      description: event.description,
+    }))
+  
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}

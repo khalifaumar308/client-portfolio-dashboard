@@ -3,9 +3,27 @@ import { ArrowRight, Calendar, MapPin } from "lucide-react"
 import { getUpcomingEvents } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { getAllEvents } from "@/lib/admin-actions/event"
 
 export async function HomepageEvents() {
-  const events = await getUpcomingEvents()
+  const events = (await getAllEvents()).filter((event) => {
+    const eventDate = new Date(event.date)
+    const today = new Date()
+    return eventDate >= today
+  })
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  .map((event) => ({
+    id: event._id,
+    title: event.title,
+    date: new Date(event.date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+    location: event.location,
+    role: event.role,
+    eventUrl: event.eventUrl,
+  }))
 
   if (events.length === 0) {
     return (
