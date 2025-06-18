@@ -13,6 +13,7 @@ import { BlogPosts } from "@/components/blog-posts"
 import { FeaturedBlogPost } from "@/components/featured-blog-post"
 import { PopularTopics } from "@/components/popular-topics"
 import { getBlogCategories, getFeaturedBlogPost } from "@/lib/api"
+import { getAllBlogPosts } from "@/lib/admin-actions/blogPost"
 
 export const metadata = {
   title: "Blog | Samuel Johnson",
@@ -21,7 +22,9 @@ export const metadata = {
 
 export default async function BlogPage() {
   // Fetch data in parallel
-  const [categories, featuredPost] = await Promise.all([getBlogCategories(), getFeaturedBlogPost()])
+  const [categories, posts] = await Promise.all([getBlogCategories(), getAllBlogPosts()])
+  ///extract first 3 posts as featured posts
+  const featuredPosts = posts.slice(0, 3)
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -58,7 +61,7 @@ export default async function BlogPage() {
       </section>
 
       {/* Featured Post */}
-      <section className="w-full py-12 md:py-16">
+      {/* <section className="w-full py-12 md:py-16 bg-red-700">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
             <h2 className="text-3xl font-bold tracking-tight">Featured Article</h2>
@@ -68,7 +71,7 @@ export default async function BlogPage() {
             <FeaturedBlogPost post={featuredPost} />
           </Suspense>
         </div>
-      </section>
+      </section> */}
 
       {/* Blog Posts Grid */}
       <section className="w-full py-12 md:py-16">

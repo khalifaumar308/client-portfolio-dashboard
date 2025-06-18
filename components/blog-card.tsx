@@ -9,12 +9,12 @@ interface BlogCardProps {
   excerpt: string
   date: string
   image: string
-  slug: string
   category: string
   readTime: string
+  _id: string
 }
 
-export function BlogCard({ title, excerpt, date, image, slug, category, readTime }: BlogCardProps) {
+export function BlogCard({ title, excerpt, date, image, category, readTime, _id }: BlogCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-2xl bg-background shadow-md transition-all hover:shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/0 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -40,7 +40,7 @@ export function BlogCard({ title, excerpt, date, image, slug, category, readTime
         </div>
         <h3 className="text-xl font-bold tracking-tight line-clamp-2">{title}</h3>
         <p className="text-muted-foreground line-clamp-3">{excerpt}</p>
-        <Link href={slug} className="inline-flex items-center text-sm font-medium text-primary">
+        <Link href={_id} className="inline-flex items-center text-sm font-medium text-primary">
           Read More <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </div>

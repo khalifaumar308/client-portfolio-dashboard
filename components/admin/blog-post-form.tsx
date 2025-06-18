@@ -1,220 +1,223 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { Loader2, Upload, X } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import BlogFormServer from "./forms/blog.form"
+import type React from "react";
+import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import BlogFormServer from "./forms/blog.form";
+import { createBlogPostT } from "@/lib/admin-actions/blogPost";
+import UploadImage from "./UploadImage";
 
 interface Category {
-  name: string
-  value: string
+  name: string;
+  value: string;
 }
 
 interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  date: string
-  category: string
-  readTime: string
-  excerpt: string
-  content: string
-  image: string
-  author: string
+  id: string;
+  title: string;
+  slug: string;
+  date: string;
+  category: string;
+  readTime: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  author: string;
 }
 
 interface BlogPostFormProps {
-  categories: Category[]
-  post?: BlogPost
+  categories: Category[];
+  post?: BlogPost;
 }
 
 export function BlogPostForm({ categories, post }: BlogPostFormProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [imageUrl, setImageUrl] = useState(post?.image || "")
-  const [finalBlog, setFinalBlog] = useState<BlogPost >(post || {
-    id: "",
-    title: "",
-    slug: "",
-    date: "",
-    category: categories[0]?.value || "",
-    readTime: "",
-    excerpt: "",
-    content: "",
-    image: "my Image",
-    author: "",
-  })
-
-  const isEditing = !!post
-
-  // async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault()
-  //   setIsLoading(true)
-  //   setError("")
-  //   const formData = new FormData(e.currentTarget)
-  //   const data = Object.fromEntries(formData.entries())
-  //   data.image = imageUrl
-  //   try {
-  //     const res = await fetch(isEditing ? `/api/blog-posts/${post?.id}` : "/api/blog-posts", {
-  //       method: isEditing ? "PUT" : "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(data),
-  //     })
-  //     if (!res.ok) throw new Error("Failed to save post")
-  //     router.push("/admin/blog")
-  //   } catch (err: any) {
-  //     setError(err.message || "Unknown error")
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
-
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0]
-  //   if (!file) return
-
-  //   // In a real app, this would upload the file to a storage service
-  //   // For demo purposes, we'll just use a placeholder
-  //   setImageUrl("/blog-concept.png")
-  // }
-
-  // const handleRemoveImage = () => {
-  //   setImageUrl("")
-  // }
+  const [state, formAction, pending] = useActionState(createBlogPostT, null);
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [imageUrl, setImageUrl] = useState(post?.image || "");
+  const today = new Date();
+  const formatted = today.toISOString().split('T')[0];
+  const [finalBlog, setFinalBlog] = useState<BlogPost>(
+    post || {
+      id: "",
+      title: "",
+      slug: "",
+      //save date as the current locale date
+      date: formatted,
+      category: categories[0]?.value || "",
+      readTime: "",
+      excerpt: "",
+      content: "",
+      image: "",
+      author: "",
+    }
+  );
+  const isEditing = !!post;
 
   return (
-    <div className="space-y-8">
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid gap-6">
-            <div className="grid gap-3">
-              <Label htmlFor="title">Blog Post Title</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="Enter blog post title"
-                value={finalBlog.title}
-                onChange={(e) => setFinalBlog({ ...finalBlog, title: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="grid gap-3">
-              <Label htmlFor="excerpt">Excerpt</Label>
-              <Textarea
-                id="excerpt"
-                name="excerpt"
-                placeholder="Enter a short excerpt"
-                value={finalBlog.excerpt}
-                onChange={(e) => setFinalBlog({ ...finalBlog, excerpt: e.target.value })}
-                required
-                className="min-h-[80px]"
-              />
-            </div>
-
-            <div className="grid gap-3">
-              <Label htmlFor="content">Content</Label>
-              <Textarea
-                id="content"
-                name="content"
-                placeholder="Enter blog post content"
-                value={finalBlog.content}
-                onChange={(e) => setFinalBlog({ ...finalBlog, content: e.target.value })}
-                required
-                className="min-h-[200px]"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="grid gap-3">
-                <Label htmlFor="category">Category</Label>
-                <Select name="category" value={finalBlog.category} onValueChange={(value) => setFinalBlog({ ...finalBlog, category: value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid gap-3">
-                <Label htmlFor="readTime">Read Time</Label>
+    <div className="max-w-2xl mx-auto w-full px-2 sm:px-4 md:px-0 py-8">
+      <Card className="shadow-lg border-none bg-white/90 dark:bg-background/80 rounded-2xl">
+        <CardContent className="pt-8 pb-6 px-4 sm:px-8">
+          <form className="space-y-8" autoComplete="off" action={formAction}>
+            <div className="grid gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="title" className="font-semibold">
+                  Blog Post Title <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="readTime"
-                  name="readTime"
-                  placeholder="e.g. 5 min read"
-                  value={finalBlog.readTime}
-                  onChange={(e) => setFinalBlog({ ...finalBlog, readTime: e.target.value })}
+                  id="title"
+                  name="title"
+                  placeholder="Enter blog post title"
+                  value={finalBlog.title}
+                  onChange={(e) =>
+                    setFinalBlog({ ...finalBlog, title: e.target.value })
+                  }
                   required
+                  className="rounded-lg"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="excerpt" className="font-semibold">
+                  Excerpt <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  id="excerpt"
+                  name="excerpt"
+                  placeholder="Enter a short excerpt"
+                  value={finalBlog.excerpt}
+                  onChange={(e) =>
+                    setFinalBlog({ ...finalBlog, excerpt: e.target.value })
+                  }
+                  required
+                  className="min-h-[80px] rounded-lg"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="content" className="font-semibold">
+                  Content <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  id="content"
+                  name="content"
+                  placeholder="Enter blog post content"
+                  value={finalBlog.content}
+                  onChange={(e) =>
+                    setFinalBlog({ ...finalBlog, content: e.target.value })
+                  }
+                  required
+                  className="min-h-[200px] rounded-lg"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="category" className="font-semibold">
+                    Category <span className="text-destructive">*</span>
+                  </Label>
+                  <Select
+                    name="category"
+                    value={finalBlog.category}
+                    onValueChange={(value) =>
+                      setFinalBlog({ ...finalBlog, category: value })
+                    }
+                  >
+                    <SelectTrigger className="rounded-lg">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="readTime" className="font-semibold">
+                    Read Time <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="readTime"
+                    name="readTime"
+                    placeholder="e.g. 5 min read"
+                    value={finalBlog.readTime}
+                    onChange={(e) =>
+                      setFinalBlog({ ...finalBlog, readTime: e.target.value })
+                    }
+                    required
+                    className="rounded-lg"
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label className="font-semibold">Featured Image</Label>
+                {/* You can add an UploadImage component here if you have one, or use a simple file input */}
+                {/* <UploadImage onUpload={setImageUrl} /> */}
+                <UploadImage onUpload={setImageUrl} />
+                {imageUrl && (
+                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border mt-2">
+                    <Image
+                      src={imageUrl}
+                      alt="Event image"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                {/* For now, just use a text input for the image URL */}
+                <Input
+                  id="image"
+                  name="image"
+                  placeholder="Image URL"
+                  value={imageUrl}
+                  onChange={(e) => {
+                    setImageUrl(e.target.value);
+                    setFinalBlog({ ...finalBlog, image: e.target.value });
+                  }}
+                  className="rounded-lg mt-2"
                 />
               </div>
             </div>
-
-            <div className="grid gap-3">
-              <Label>Featured Image</Label>
-              {/* <div className="space-y-4">
-                {imageUrl ? (
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                    <Image src={imageUrl || "/placeholder.svg"} alt="Blog post image" fill className="object-cover" />
-                    <Button
-                      type="button"
-                      size="icon"
-                      variant="destructive"
-                      className="absolute right-2 top-2"
-                      onClick={handleRemoveImage}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex aspect-video w-full flex-col items-center justify-center rounded-lg border border-dashed">
-                    <Upload className="h-8 w-8 text-muted-foreground" />
-                    <p className="mt-2 text-sm text-muted-foreground">Drag & drop an image or click to browse</p>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between">
-                  <Input type="file" accept="image/*" onChange={handleImageUpload} className="max-w-xs" />
-                  {!imageUrl && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        // Use a placeholder image if no image is uploaded
-                        setImageUrl("/blog-concept.png")
-                      }}
-                    >
-                      Use Placeholder
-                    </Button>
-                  )}
-                </div>
-              </div> */}
+            <input
+              type="hidden"
+              name="blog"
+              value={JSON.stringify({ ...finalBlog, image: imageUrl })}
+            />
+            {error && (
+              <div className="text-sm font-medium text-destructive mt-2">
+                {error}
+              </div>
+            )}
+            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <Button type="submit" className="w-full rounded-full" disabled={pending}>
+                {isEditing ? "Update Blog" : "Create Blog"}
+              </Button>
+              {pending && <span className="ml-2 text-sm text-muted-foreground">Saving...</span>}
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-full"
+                onClick={() => router.push("/admin/blog")}
+              >
+                Cancel
+              </Button>
             </div>
-          </div>
+          </form>
         </CardContent>
       </Card>
-
-      {error && <div className="text-sm font-medium text-destructive">{error}</div>}
-
-      <div className="flex gap-4">
-        <BlogFormServer blog={{ ...finalBlog, image: imageUrl }} />
-      </div>
     </div>
-  )
+  );
 }

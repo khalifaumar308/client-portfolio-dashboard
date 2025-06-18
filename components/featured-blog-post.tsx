@@ -3,10 +3,12 @@ import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import type { BlogPost } from "@/lib/api-types"
+import { IBlogPost } from "@/lib/models/BlogPost"
+
+interface IBlog extends IBlogPost { _id: string }
 
 interface FeaturedBlogPostProps {
-  post: BlogPost
+  post: IBlog
 }
 
 export function FeaturedBlogPost({ post }: FeaturedBlogPostProps) {
@@ -32,19 +34,19 @@ export function FeaturedBlogPost({ post }: FeaturedBlogPostProps) {
           <div className="flex items-center gap-2">
             <div className="relative h-10 w-10 overflow-hidden rounded-full">
               <Image
-                src={post.author?.image || "/placeholder.svg?height=40&width=40"}
-                alt={post.author?.name || "Samuel Johnson"}
+                src={"/placeholder.svg?height=40&width=40"}
+                alt={ "Samuel Johnson"}
                 fill
                 className="object-cover"
               />
             </div>
             <div>
-              <p className="text-sm font-medium">{post.author?.name || "Samuel Johnson"}</p>
+              <p className="text-sm font-medium">{ "Samuel Johnson"}</p>
               <p className="text-xs text-muted-foreground">{post.date}</p>
             </div>
           </div>
           <Button className="mt-4 w-fit rounded-full" asChild>
-            <Link href={post.slug}>
+            <Link href={post._id}>
               Read Article <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

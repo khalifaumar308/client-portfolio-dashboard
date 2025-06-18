@@ -1,29 +1,58 @@
 'use server'
 import BlogPost, { IBlogPost } from '../models/BlogPost'
-import mongoose from 'mongoose'
 import { connectToMongoDB } from '../models/connectDB'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+export interface IDBlog extends IBlogPost {
+  _id: string
+}
+
+interface BlogPostData extends IBlogPost {
+  _id?: string
+}
+
 
 export async function getAllBlogPosts() {
   await connectToMongoDB()
-  return BlogPost.find().lean()
+  const posts = await BlogPost.find().lean()
+  return JSON.parse(JSON.stringify(posts)) as IDBlog[]
 }
 
 export async function getBlogPostById(id: string) {
   await connectToMongoDB()
-  return BlogPost.findById(id).lean()
+  //check if id is a valid ObjectId and BlogPost exists
+  if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+    throw new Error('Invalid blog post ID')
+  }
+  const post = await BlogPost.findById(id).lean()
+  if (!post) {
+    throw new Error(`Blog post with id ${id} not found`)
+  }
+  // If the post is found, return it
+  console.log(post, 'post in getBlogPostById')
+  return JSON.parse(JSON.stringify(post)) as IDBlog
 }
 
 export async function createBlogPostT(prevState: any, formData: FormData) {
 
   const blogForm = Object.fromEntries(formData.entries()).blog as string
-  const finalblog = JSON.parse(blogForm) as IBlogPost
+  const finalblog = JSON.parse(blogForm) as BlogPostData
   console.log(finalblog, 'finalblog in createBlogPostT')
-  const date = new Date(finalblog.date)
   await connectToMongoDB()
-  const post = new BlogPost({...finalblog, date: date.toLocaleDateString() })
+  if (finalblog._id) {
+    // If _id exists, update the blog post
+    const existingPost = await BlogPost.findById(finalblog._id).lean()
+    if (!existingPost) {
+      throw new Error(`Blog post with id ${finalblog._id} not found`)
+    }
+    await BlogPost.findByIdAndUpdate(finalblog._id, finalblog, { new: true })
+    revalidatePath('/admin/blog')
+    redirect('/admin/blog')
+    return 'Blog post updated successfully'
+  }
+  // If _id does not exist, create a new blog post
+  const post = new BlogPost({ ...finalblog })
   await post.save()
   revalidatePath('/admin/blog')
   redirect('/admin/blog')

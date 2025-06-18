@@ -8,7 +8,9 @@ export interface IBlogPost {
   excerpt: string
   content: string
   image: string
+  tags?: string[]
 }
+
 
 const BlogPostSchema = new mongoose.Schema<IBlogPost>({
   title: { type: String, required: true },
@@ -18,6 +20,7 @@ const BlogPostSchema = new mongoose.Schema<IBlogPost>({
   excerpt: { type: String, required: true },
   content: { type: String, required: true },
   image: { type: String, required: true },
+  tags: { type: [String], default: [] }
 })
 
 export default mongoose.models.BlogPost || mongoose.model<IBlogPost>('BlogPost', BlogPostSchema)

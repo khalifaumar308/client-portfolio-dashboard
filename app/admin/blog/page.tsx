@@ -98,13 +98,7 @@ export default function BlogPage() {
           </div>
 
           <BlogPostsTable posts={posts} onDelete={async (id: string) => {
-            // Call DELETE API
-            const res = await fetch(`/api/blog-posts/${id}`, { method: "DELETE" })
-            if (res.ok) {
-              setPosts((prev) => prev.filter((p: any) => p._id !== id && p.id !== id))
-            } else {
-              alert("Failed to delete post")
-            }
+            // Call DELETE
           }} />
         </>
       )}

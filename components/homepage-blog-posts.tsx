@@ -1,8 +1,8 @@
-import { getBlogPosts } from "@/lib/api"
 import { BlogPreview } from "@/components/blog-preview"
+import { getAllBlogPosts } from "@/lib/admin-actions/blogPost"
 
 export async function HomepageBlogPosts() {
-  const posts = await getBlogPosts()
+  const posts = await getAllBlogPosts()
 
   // Display up to 3 blog posts on the homepage
   const displayPosts = posts.slice(0, 3)
@@ -11,13 +11,13 @@ export async function HomepageBlogPosts() {
     <div className="grid gap-8 md:grid-cols-3">
       {displayPosts.map((post) => (
         <BlogPreview
-          key={post.id}
+          key={post._id}
           title={post.title}
           excerpt={post.excerpt}
           date={post.date}
           image={post.image}
-          slug={post.slug}
           category={post.category}
+          _id={post._id}
         />
       ))}
     </div>

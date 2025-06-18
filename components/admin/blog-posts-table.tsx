@@ -27,9 +27,8 @@ import {
 } from "@/components/ui/alert-dialog"
 
 interface BlogPost {
-  id: string
+  _id: string
   title: string
-  slug: string
   date: string
   category: string
   readTime: string
@@ -56,11 +55,12 @@ export function BlogPostsTable({ posts, onDelete }: BlogPostsTableProps) {
   const handleDeleteConfirm = async () => {
     if (postToDelete) {
       if (onDelete) {
-        await onDelete(postToDelete.id)
+        await onDelete(postToDelete._id)
       }
       setIsDeleteDialogOpen(false)
     }
   }
+  console.log("BlogPostsTable rendered with posts:", posts.map(post => post.date));
 
   return (
     <>
@@ -84,7 +84,7 @@ export function BlogPostsTable({ posts, onDelete }: BlogPostsTableProps) {
               </TableRow>
             ) : (
               posts.map((post) => (
-                <TableRow key={post.id}>
+                <TableRow key={post._id}>
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell>
                     <div className="flex items-center">
@@ -107,13 +107,13 @@ export function BlogPostsTable({ posts, onDelete }: BlogPostsTableProps) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
-                          <Link href={`/admin/blog/edit/${post.id}`}>
+                          <Link href={`/admin/blog/edit/${post._id}`}>
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={post.slug} target="_blank">
+                          <Link href={post._id} target="_blank">
                             <ExternalLink className="mr-2 h-4 w-4" />
                             View Post
                           </Link>

@@ -25,9 +25,6 @@ export async function getEventById(id: string) {
 export async function addEvent(prevState: any, formData: FormData) {
   const eventForm = Object.fromEntries(formData.entries()).event as string
   const finalEvent = JSON.parse(eventForm) as EventData
-  // if (!finalEvent || !finalEvent.title || !finalEvent.date || !finalEvent.type || !finalEvent.role || !finalEvent.eventUrl || !finalEvent.image) {
-  //   throw new Error("Missing required fields: title, date, type, role, eventUrl, or image")
-  // }
   await connectToMongoDB()
   if (finalEvent._id) {
     // If _id exists, update the event

@@ -9,11 +9,11 @@ interface BlogPreviewProps {
   excerpt: string
   date: string
   image: string
-  slug: string
   category: string
+  _id: string
 }
 
-export function BlogPreview({ title, excerpt, date, image, slug, category }: BlogPreviewProps) {
+export function BlogPreview({ title, excerpt, date, image, category, _id }: BlogPreviewProps) {
   return (
     <div className="group relative overflow-hidden rounded-2xl bg-background shadow-md transition-all hover:shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/0 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -32,7 +32,7 @@ export function BlogPreview({ title, excerpt, date, image, slug, category }: Blo
         </time>
         <h3 className="text-xl font-bold tracking-tight">{title}</h3>
         <p className="text-muted-foreground line-clamp-2">{excerpt}</p>
-        <Link href={slug} className="inline-flex items-center text-sm font-medium text-primary">
+        <Link href={_id} className="inline-flex items-center text-sm font-medium text-primary">
           Read More <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </div>
