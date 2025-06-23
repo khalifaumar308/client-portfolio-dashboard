@@ -7,10 +7,6 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { BlogPostForm } from "@/components/admin/blog-post-form"
 
-export const metadata = {
-  title: "Edit Blog Post | Admin Dashboard",
-  description: "Edit an existing blog post or article",
-}
 
 interface EditBlogPostPageProps {
   params: {
