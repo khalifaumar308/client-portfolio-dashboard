@@ -1,30 +1,36 @@
-"use server"
-
+'use server'
 import { cookies } from "next/headers"
+import jwt, {sign as JwtSign} from "jsonwebtoken"
+import { getUser } from "./admin-actions/user";
 
-// This is a simple login function for demonstration purposes
-// In a real application, you would use a proper authentication system
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret" // Use a strong secret in production
+
 export async function login(email: string, password: string): Promise<{ success: boolean; error?: string }> {
-  // For demo purposes, we'll accept any email with a password of "password"
-  if (password === "password") {
-    // Set a cookie to simulate authentication
-    cookies().set("auth_token", "demo_token", {
+  if (email && password) {
+    const user = await getUser(email)
+    if (!user) {
+      return {
+        success: false,
+        error: "Invalid email or password.",
+      }
+    }
+    // Create a JWT token
+    const token = JwtSign({ email }, JWT_SECRET, { expiresIn: "7d" });
+    (await cookies()).set("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     })
-
     return { success: true }
   }
-
   return {
     success: false,
-    error: "Invalid email or password. For demo, use any email with password 'password'.",
+    error: "Invalid email or password.",
   }
 }
 
 export async function logout(): Promise<{ success: boolean }> {
-  cookies().delete("auth_token")
+  (await cookies()).delete("auth_token")
   return { success: true }
 }

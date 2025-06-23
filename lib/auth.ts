@@ -1,13 +1,15 @@
-// This is a simple auth check function for demonstration purposes
-// In a real application, you would use a proper authentication system
-// like NextAuth.js, Auth.js, or a custom solution with JWT
-
 import { cookies } from "next/headers"
+import jwt from "jsonwebtoken"
+
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret"
 
 export async function checkAuth(): Promise<boolean> {
-  // In a real app, you would verify the session token with your auth provider
-  const authCookie = cookies().get("auth_token")
-
-  // For demo purposes, we'll consider the user authenticated if the cookie exists
-  return !!authCookie?.value
+  const authCookie = (await cookies()).get("auth_token")
+  if (!authCookie?.value) return false
+  try {
+    jwt.verify(authCookie.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
 }

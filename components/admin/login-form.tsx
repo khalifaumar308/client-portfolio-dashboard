@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { login } from "@/lib/auth-actions"
 
 export function LoginForm() {
   const router = useRouter()
@@ -20,13 +21,21 @@ export function LoginForm() {
     event.preventDefault()
     setIsLoading(true)
     setError("")
-
-    // Simulate login - in a real app, this would call an API
-    setTimeout(() => {
-      // For demo purposes, any credentials will work
-      router.push("/admin")
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+    try {
+      const result = await login(email, password)
+      if (result.success) {
+        router.push("/admin")
+      } else {
+        setError(result.error || "Login failed")
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.")
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   return (

@@ -2,6 +2,9 @@ import type React from "react"
 import { Inter } from "next/font/google"
 import Link from "next/link"
 import { ChevronDown, LogOut, Menu, Settings, User } from "lucide-react"
+import { logout } from "@/lib/auth-actions";
+import { redirect } from "next/navigation";
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -72,10 +75,24 @@ export default function AdminLayout({
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/admin/login">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </Link>
+                    <form
+                      action={async () => {
+                        "use server";
+                        await logout();
+                        redirect("/login");
+                      }}
+                      method="POST"
+                      style={{ width: "100%" }}
+                    >
+                      <button
+                        type="submit"
+                        className="flex items-center w-full bg-transparent border-0 p-0 m-0 text-left cursor-pointer"
+                        style={{ background: "none" }}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </button>
+                    </form>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
