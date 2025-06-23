@@ -53,8 +53,9 @@ export default async function Home() {
     return <div className="container mx-auto px-4 py-20">Loading...</div>
   }
   // get the last word of hero heading
-  const lastWord = hero.heading.split(" ").pop() || ""
-  const headingWithoutLastWord = hero.heading.replace(new RegExp(`\\b${lastWord}\\b$`), "").trim()
+  const heading = typeof hero.heading === "string" ? hero.heading : ""
+  const lastWord = heading.split(" ").pop() || ""
+  const headingWithoutLastWord = heading.replace(new RegExp(`\\b${lastWord}\\b$`), "").trim()
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
