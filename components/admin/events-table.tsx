@@ -54,7 +54,7 @@ export function EventsTable({ events }: EventsTableProps) {
   const handleDeleteConfirm = async () => {
     if (eventToDelete) {
       // In a real app, this would call an API to delete the event
-      console.log("Deleting event:", eventToDelete._id)
+      
 
       // For demo purposes, we'll just close the dialog
       setIsDeleteDialogOpen(false)

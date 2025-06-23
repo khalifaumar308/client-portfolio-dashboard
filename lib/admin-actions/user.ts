@@ -8,7 +8,7 @@ export const getUser = async(email: string) => {
   }
   await connectToMongoDB()
   const user = await User.find({ email })
-  console.log(user, 'user')
+  
   if (user.length > 0) {
     return true
   }

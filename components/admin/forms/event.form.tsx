@@ -5,7 +5,7 @@ import { NewEvent } from "@/lib/models/Event";
 
 const EventFormServer = ({event}:{event:NewEvent}) => {
   const [, formAction,] = useActionState(addEvent, null);
-  console.log(event, 'event in EventFormServer');
+  ;
   return (
     <div>
       <form action={formAction}>

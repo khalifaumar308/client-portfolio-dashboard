@@ -60,7 +60,7 @@ export function BlogPostsTable({ posts, onDelete }: BlogPostsTableProps) {
       setIsDeleteDialogOpen(false)
     }
   }
-  console.log("BlogPostsTable rendered with posts:", posts.map(post => post.date));
+  ;
 
   return (
     <>

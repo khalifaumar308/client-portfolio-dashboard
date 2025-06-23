@@ -18,6 +18,9 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { getHero } from "@/lib/admin-actions/hero"
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata = {
   title: "Samuel Johnson | Fintech Consultant & Business Advisor",
   description:

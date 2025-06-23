@@ -13,7 +13,7 @@ export default function UploadImage({ onUpload }: { onUpload: (url: string) => v
         uploadPreset="First Preset" // Set this in your Cloudinary settings
         onSuccess={(result: any) => {
           // Cloudinary returns the uploaded image info in result.info
-          console.log('Upload successful:', result);
+          ;
           const url = result.info?.secure_url as string;
           setPreview(url);
           onUpload(url);

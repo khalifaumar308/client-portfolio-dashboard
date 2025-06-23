@@ -30,7 +30,7 @@ export async function getBlogPostById(id: string) {
     throw new Error(`Blog post with id ${id} not found`)
   }
   // If the post is found, return it
-  console.log(post, 'post in getBlogPostById')
+  
   return JSON.parse(JSON.stringify(post)) as IDBlog
 }
 
@@ -38,7 +38,7 @@ export async function createBlogPostT(prevState: any, formData: FormData) {
 
   const blogForm = Object.fromEntries(formData.entries()).blog as string
   const finalblog = JSON.parse(blogForm) as BlogPostData
-  console.log(finalblog, 'finalblog in createBlogPostT')
+  
   await connectToMongoDB()
   if (finalblog._id) {
     // If _id exists, update the blog post

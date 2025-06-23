@@ -8,7 +8,7 @@ interface SocialLinksProps {
 }
 
 export function SocialLinks({ className, socials }: SocialLinksProps) {
-  console.log("Socials:", socials)
+  
   if (!socials || socials.length === 0) {
     return null; // Return null if no socials are provided
   }

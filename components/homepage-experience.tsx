@@ -21,7 +21,7 @@ export async function HomepageExperience() {
     // separate experiance by type
     const professional = experiances.filter(({ type }) => type === 'Professional')
   const advisory = experiances.filter(({ type }) => type === 'Advisory')
-  console.log(experiances, 'exp')
+  
     const icons = [
       <Briefcase key='0' className="h-6 w-6" />,
       <Building key='1' className="h-6 w-6" />,

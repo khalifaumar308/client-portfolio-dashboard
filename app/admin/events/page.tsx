@@ -14,7 +14,7 @@ export const metadata = {
 
 export default async function EventsPage() {
   const events = await getAllEvents()
-  console.log("Fetched events:", events)
+  
   // Mock data
   // const upcomingEvents = [
   //   {

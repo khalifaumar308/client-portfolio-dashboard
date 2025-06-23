@@ -57,7 +57,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
   const handleDeleteConfirm = async () => {
     if (serviceToDelete) {
       // In a real app, this would call an API to delete the service
-      console.log("Deleting service:", serviceToDelete._id)
+      
 
       // For demo purposes, we'll just close the dialog
       setIsDeleteDialogOpen(false)
@@ -69,17 +69,17 @@ export function ServicesTable({ services }: ServicesTableProps) {
 
   const handleMoveUp = (id: string) => {
     // In a real app, this would call an API to update the order
-    console.log("Moving service up:", id)
+    
   }
 
   const handleMoveDown = (id: string) => {
     // In a real app, this would call an API to update the order
-    console.log("Moving service down:", id)
+    
   }
 
   const handleToggleFeatured = (id: string, featured: boolean) => {
     // In a real app, this would call an API to update the featured status
-    console.log("Toggling featured status for service:", id, "to", !featured)
+    
   }
 
   return (
