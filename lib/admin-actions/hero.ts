@@ -33,6 +33,8 @@ export async function getHero() {
 export async function createHero(prevData: any, formData: FormData) {
   const hero = Object.fromEntries(formData.entries()).hero as string
   const finalHero = JSON.parse(hero) as IHero & { _id?: string }
+  await connectToMongoDB()
+  
   if (finalHero._id) {
     // If _id exists, update the hero
     const existingHero = await Hero.findById(finalHero._id).lean()
@@ -43,7 +45,6 @@ export async function createHero(prevData: any, formData: FormData) {
     revalidatePath('/admin/hero')
     return 'done'
   }
-  await connectToMongoDB()
   const newHero = new Hero(finalHero)
   await newHero.save()
   revalidatePath('/admin/hero')

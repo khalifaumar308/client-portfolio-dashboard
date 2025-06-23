@@ -21,6 +21,8 @@ export async function getExperienceById(id: string) {
 export async function createExperience(prevState: any, formData: FormData) {
   const eventForm = Object.fromEntries(formData.entries()).experience as string
   const finalEvent = JSON.parse(eventForm) as ExperienceUpdate
+  await connectToMongoDB()
+  
   if (finalEvent._id) {
     // If _id exists, update the experience
     const existingExperience = await Experience.findById(finalEvent._id).lean()
@@ -32,7 +34,6 @@ export async function createExperience(prevState: any, formData: FormData) {
     redirect('/admin/experience')
     
   }
-  await connectToMongoDB()
   const experience = new Experience(finalEvent)
   await experience.save()
   revalidatePath('/admin/experience')

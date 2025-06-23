@@ -1,9 +1,16 @@
 'use server'
 import { connectToMongoDB } from '../models/connectDB'
 import Service from '../models/Service'
-import { INewService } from '@/components/types'
+import { INewService, IService } from '@/components/types'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+
+type serviceUUpdate = INewService & { _id?: string }
+
+export async function getAllServices() {
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Service.find().lean())) as IService[]
+}
 
 // Server action for creating or updating a service
 export async function createService(prevData: any, formData: FormData) {

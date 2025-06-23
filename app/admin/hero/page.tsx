@@ -1,6 +1,7 @@
 import HeroForm from "@/components/admin/hero-form"
 import { getHero } from "@/lib/admin-actions/hero"
 import Image from "next/image"
+export const dynamic = "force-dynamic";
 
 async function page() {
   const hero = await getHero()

@@ -18,7 +18,7 @@ import { AnimatedGradient } from "@/components/animated-gradient"
 import { ServiceDetailCard } from "@/components/service-detail-card"
 import { TestimonialCard } from "@/components/testimonial-card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getAllServices } from "@/lib/admin-actions/service"
+import { getAllServices } from "@/lib/admin-actions/service.action"
 import { iconOptions } from "@/components/iconOptions"
 
 export const metadata = {

@@ -16,6 +16,7 @@ import { SpeakingTopics } from "@/components/speaking-topics"
 import { EventTestimonials } from "@/components/event-testimonials"
 import { getEventTypes, getEventRoles } from "@/lib/api"
 import { getAllEvents } from "@/lib/admin-actions/event"
+import { EventFiltersClient } from "@/components/event-filter-client"
 
 export const metadata = {
   title: "Events & Speaking | Samuel Johnson",
@@ -168,8 +169,9 @@ export default async function EventsPage() {
                 </TabsTrigger>
               </TabsList>
               <div className="flex flex-wrap gap-3">
-                <EventFilter label="Type" options={eventTypesData} />
-                <EventFilter label="Role" options={eventRolesData} />
+                <Suspense fallback={null}>
+                  <EventFiltersClient eventTypesData={eventTypesData} eventRolesData={eventRolesData} />
+                </Suspense>
               </div>
             </div>
 

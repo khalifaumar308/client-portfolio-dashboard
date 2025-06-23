@@ -20,6 +20,7 @@ import { ProjectCard } from "@/components/project-card"
 import { TestimonialCard } from "@/components/testimonial-card"
 import { SkillBar } from "@/components/skill-bar"
 import { getAllExperiences } from "@/lib/admin-actions/experience"
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Experience | Samuel Johnson",
