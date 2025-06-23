@@ -1,37 +1,25 @@
+import { connectToMongoDB } from '../models/connectDB'
 import Service from '../models/Service'
-import mongoose from 'mongoose'
+import { INewService, IService } from '@/components/types'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/porpolio'
-
-async function dbConnect() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI)
-  }
-}
+type serviceUUpdate = INewService & { _id?: string }
 
 export async function getAllServices() {
-  await dbConnect()
-  return Service.find().lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Service.find().lean())) as IService[]
 }
 
 export async function getServiceById(id: string) {
-  await dbConnect()
-  return Service.findById(id).lean()
-}
-
-export async function createService(data: any) {
-  await dbConnect()
-  const service = new Service(data)
-  await service.save()
-  return service.toObject()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Service.findById(id).lean())) as IService | null
 }
 
 export async function updateService(id: string, data: any) {
-  await dbConnect()
-  return Service.findByIdAndUpdate(id, data, { new: true }).lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Service.findByIdAndUpdate(id, data, { new: true }).lean())) as IService | null
 }
 
 export async function deleteService(id: string) {
-  await dbConnect()
-  return Service.findByIdAndDelete(id).lean()
+  await connectToMongoDB()
+  return JSON.parse(JSON.stringify(await Service.findByIdAndDelete(id).lean())) as IService | null
 }

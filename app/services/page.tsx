@@ -18,6 +18,8 @@ import { AnimatedGradient } from "@/components/animated-gradient"
 import { ServiceDetailCard } from "@/components/service-detail-card"
 import { TestimonialCard } from "@/components/testimonial-card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { getAllServices } from "@/lib/admin-actions/service"
+import { iconOptions } from "@/components/iconOptions"
 
 export const metadata = {
   title: "Services | Samuel Johnson",
@@ -25,7 +27,13 @@ export const metadata = {
     "Comprehensive fintech consulting services including regulatory compliance, business development, fundraising support, and legal advisory.",
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getAllServices()
+
+  //separate services by type
+  const regulatoryServices = services.filter((service) => service.type === "Regulation")
+  const businessServices = services.filter((service) => service.type === "Business")
+  const legalServices = services.filter((service) => service.type === "Legal")
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -82,7 +90,21 @@ export default function ServicesPage() {
               </TabsList>
 
               <TabsContent value="regulatory" className="space-y-8">
-                <ServiceDetailCard
+                {regulatoryServices.map((service) => (
+                  <ServiceDetailCard
+                    key={service._id}
+                    title={service.title}
+                    description={service.description}
+                    icon={iconOptions.filter((icon) => icon.value === service.icon)[0]?.icon || <Shield className="h-6 w-6" />}
+                    image={service.imageUrl || "/placeholder.svg?height=300&width=600"}
+                    features={service.listItems}
+                    cta={{
+                      text: "Learn More",
+                      link: "/services/regulatory-compliance",
+                    }}
+                  />
+                ))}
+                {/* <ServiceDetailCard
                   title="Regulatory Compliance"
                   description="Navigate complex regulatory frameworks to ensure your fintech business remains compliant while innovating."
                   icon={<Shield className="h-6 w-6" />}
@@ -118,106 +140,41 @@ export default function ServicesPage() {
                     text: "Learn More",
                     link: "/services/risk-management",
                   }}
-                />
+                /> */}
               </TabsContent>
 
               <TabsContent value="business" className="space-y-8">
-                <ServiceDetailCard
-                  title="Business Development"
-                  description="Accelerate growth and expansion with strategic planning and execution."
-                  icon={<BarChart3 className="h-6 w-6" />}
-                  image="/placeholder.svg?height=300&width=600"
-                  features={[
-                    "Market entry strategy",
-                    "Partnership development",
-                    "Business model refinement",
-                    "Growth planning",
-                    "Competitive analysis",
-                    "Go-to-market strategy",
-                  ]}
-                  cta={{
-                    text: "Learn More",
-                    link: "/services/business-development",
-                  }}
-                />
-
-                <ServiceDetailCard
-                  title="Fundraising Support"
-                  description="Secure investment for your venture with expert guidance and preparation."
-                  icon={<Building className="h-6 w-6" />}
-                  image="/placeholder.svg?height=300&width=600"
-                  features={[
-                    "Investor documentation",
-                    "Pitch deck development",
-                    "Due diligence preparation",
-                    "Investor networking",
-                    "Valuation guidance",
-                    "Term sheet negotiation",
-                  ]}
-                  cta={{
-                    text: "Learn More",
-                    link: "/services/fundraising",
-                  }}
-                />
-
-                <ServiceDetailCard
-                  title="Strategic Partnerships"
-                  description="Build valuable alliances and networks that drive collaborative success and business growth."
-                  icon={<Handshake className="h-6 w-6" />}
-                  image="/placeholder.svg?height=300&width=600"
-                  features={[
-                    "Partner identification",
-                    "Partnership strategy",
-                    "Negotiation support",
-                    "Alliance management",
-                    "Joint venture structuring",
-                    "Partnership evaluation",
-                  ]}
-                  cta={{
-                    text: "Learn More",
-                    link: "/services/strategic-partnerships",
-                  }}
-                />
+                {businessServices.map((service) => (
+                  <ServiceDetailCard
+                    key={service._id}
+                    title={service.title}
+                    description={service.description}
+                    icon={iconOptions.filter((icon) => icon.value === service.icon)[0]?.icon || <Shield className="h-6 w-6" />}
+                    image={service.imageUrl || "/placeholder.svg?height=300&width=600"}
+                    features={service.listItems}
+                    cta={{
+                      text: "Learn More",
+                      link: "/services/regulatory-compliance",
+                    }}
+                  />
+                ))}
               </TabsContent>
 
               <TabsContent value="legal" className="space-y-8">
-                <ServiceDetailCard
-                  title="Legal Advisory"
-                  description="Expert guidance on legal matters related to fintech operations and growth."
-                  icon={<FileCheck className="h-6 w-6" />}
-                  image="/placeholder.svg?height=300&width=600"
-                  features={[
-                    "Contract review and drafting",
-                    "Corporate governance",
-                    "Intellectual property protection",
-                    "Regulatory compliance",
-                    "Privacy and data protection",
-                    "Dispute resolution",
-                  ]}
-                  cta={{
-                    text: "Learn More",
-                    link: "/services/legal-advisory",
-                  }}
-                />
-
-                <ServiceDetailCard
-                  title="Corporate Training"
-                  description="Develop team capabilities with specialized training programs."
-                  icon={<BookOpen className="h-6 w-6" />}
-                  image="/placeholder.svg?height=300&width=600"
-                  features={[
-                    "Regulatory compliance training",
-                    "Leadership development",
-                    "Team building workshops",
-                    "Strategic planning sessions",
-                    "Risk management education",
-                    "Fintech industry insights",
-                  ]}
-                  cta={{
-                    text: "Learn More",
-                    link: "/services/corporate-training",
-                  }}
-                />
+                {legalServices.map((service) => (
+                  <ServiceDetailCard
+                    key={service._id}
+                    title={service.title}
+                    description={service.description}
+                    icon={iconOptions.filter((icon) => icon.value === service.icon)[0]?.icon || <Shield className="h-6 w-6" />}
+                    image={service.imageUrl || "/placeholder.svg?height=300&width=600"}
+                    features={service.listItems}
+                    cta={{
+                      text: "Learn More",
+                      link: "/services/regulatory-compliance",
+                    }}
+                  />
+                ))}
               </TabsContent>
             </Tabs>
           </div>

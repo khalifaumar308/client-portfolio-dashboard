@@ -1,38 +1,51 @@
+'use server'
+import { IHero } from '@/components/types'
+import { connectToMongoDB } from '../models/connectDB'
 import Hero from '../models/Hero'
-import mongoose from 'mongoose'
+import { revalidatePath } from 'next/cache'
 
-// Connect to MongoDB (adjust URI as needed)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/porpolio'
 
-async function dbConnect() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI)
+export async function getHero() {
+  await connectToMongoDB()
+  const hero = await Hero.find().lean()
+  if (!hero || hero.length === 0) {
+    // If no hero exists, create a default one
+    const defaultHero: IHero = {
+      title: 'Default Hero',
+      imageUrl: '/default-hero.jpg',
+      subText: 'This is a default hero description.',
+      yearsOfExperience: 0,
+      clientsServed: 0,
+      endorsements: 0,
+      partnerships: 0,
+      socialMediaLinks: [],
+      heading: 'Welcome to Our Service',
+    }
+    const newHero = new Hero(defaultHero)
+    await newHero.save()
+    return defaultHero
   }
+  // If a hero exists, return the first one
+  return JSON.parse(JSON.stringify(hero[0])) as IHero
 }
 
-export async function getAllHeroes() {
-  await dbConnect()
-  return Hero.find().lean()
-}
 
-export async function getHeroById(id: string) {
-  await dbConnect()
-  return Hero.findById(id).lean()
-}
-
-export async function createHero(data: any) {
-  await dbConnect()
-  const hero = new Hero(data)
-  await hero.save()
-  return hero.toObject()
-}
-
-export async function updateHero(id: string, data: any) {
-  await dbConnect()
-  return Hero.findByIdAndUpdate(id, data, { new: true }).lean()
-}
-
-export async function deleteHero(id: string) {
-  await dbConnect()
-  return Hero.findByIdAndDelete(id).lean()
+export async function createHero(prevData: any, formData: FormData) {
+  const hero = Object.fromEntries(formData.entries()).hero as string
+  const finalHero = JSON.parse(hero) as IHero & { _id?: string }
+  if (finalHero._id) {
+    // If _id exists, update the hero
+    const existingHero = await Hero.findById(finalHero._id).lean()
+    if (!existingHero) {
+      return { error: `Hero with id ${finalHero._id} not found` }
+    }
+    await Hero.findByIdAndUpdate(finalHero._id, finalHero, { new: true })
+    revalidatePath('/admin/hero')
+    return 'done'
+  }
+  await connectToMongoDB()
+  const newHero = new Hero(finalHero)
+  await newHero.save()
+  revalidatePath('/admin/hero')
+  return 'done'
 }

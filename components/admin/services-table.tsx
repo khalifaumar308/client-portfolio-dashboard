@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { MoreHorizontal, Pencil, Trash2, Star, ArrowUp, ArrowDown } from "lucide-react"
+import { useActionState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -25,26 +26,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { deleteServiceAction } from "@/lib/admin-actions/service.action"
+import { IService } from "@/components/types"
 
-interface Service {
-  id: string
-  title: string
-  slug: string
-  description: string
-  icon: string
-  featured: boolean
-  order: number
-}
+// interface Service {
+//   id: string
+//   title: string
+//   slug: string
+//   description: string
+//   icon: string
+//   featured: boolean
+//   order: number
+// }
 
 interface ServicesTableProps {
-  services: Service[]
+  services: IService[]
 }
 
 export function ServicesTable({ services }: ServicesTableProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null)
+  const [serviceToDelete, setServiceToDelete] = useState<IService | null>(null)
+  // Server action state for delete
+  const [deleteState, deleteAction, isDeleting] = useActionState(deleteServiceAction, null)
 
-  const handleDeleteClick = (service: Service) => {
+  const handleDeleteClick = (service: IService) => {
     setServiceToDelete(service)
     setIsDeleteDialogOpen(true)
   }
@@ -52,7 +57,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
   const handleDeleteConfirm = async () => {
     if (serviceToDelete) {
       // In a real app, this would call an API to delete the service
-      console.log("Deleting service:", serviceToDelete.id)
+      console.log("Deleting service:", serviceToDelete._id)
 
       // For demo purposes, we'll just close the dialog
       setIsDeleteDialogOpen(false)
@@ -100,7 +105,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
               </TableRow>
             ) : (
               services.map((service) => (
-                <TableRow key={service.id}>
+                <TableRow key={service._id}>
                   <TableCell className="font-medium">{service.title}</TableCell>
                   <TableCell className="max-w-xs truncate">{service.description}</TableCell>
                   <TableCell>{service.icon}</TableCell>
@@ -108,14 +113,14 @@ export function ServicesTable({ services }: ServicesTableProps) {
                     {service.featured ? <Badge>Featured</Badge> : <Badge variant="outline">Standard</Badge>}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <span>{service.order}</span>
                       <div className="flex flex-col">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-5 w-5"
-                          onClick={() => handleMoveUp(service.id)}
+                          onClick={() => handleMoveUp(service._id)}
                           disabled={service.order === 1}
                         >
                           <ArrowUp className="h-3 w-3" />
@@ -130,7 +135,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
                           <ArrowDown className="h-3 w-3" />
                         </Button>
                       </div>
-                    </div>
+                    </div> */}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -143,12 +148,12 @@ export function ServicesTable({ services }: ServicesTableProps) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
-                          <Link href={`/admin/services/edit/${service.id}`}>
+                          <Link href={`/admin/services/edit/${service._id}`}>
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleToggleFeatured(service.id, service.featured)}>
+                        <DropdownMenuItem onClick={() => handleToggleFeatured(service._id, service.featured)}>
                           <Star className="mr-2 h-4 w-4" />
                           {service.featured ? "Remove from featured" : "Add to featured"}
                         </DropdownMenuItem>
@@ -175,19 +180,29 @@ export function ServicesTable({ services }: ServicesTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the service &quot;{serviceToDelete?.title}&quot;. This action cannot be
-              undone.
+              This will permanently delete the service &quot;{serviceToDelete?.title}&quot;. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <form
+              action={deleteAction}
+              onSubmit={() => setIsDeleteDialogOpen(false)}
+              className="inline"
             >
-              Delete
-            </AlertDialogAction>
+              <input type="hidden" name="serviceId" value={serviceToDelete?._id || ""} />
+              <AlertDialogAction
+                type="submit"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </form>
           </AlertDialogFooter>
+          {deleteState?.error && (
+            <div className="text-red-500 text-sm mt-2">{deleteState.error}</div>
+          )}
         </AlertDialogContent>
       </AlertDialog>
     </>

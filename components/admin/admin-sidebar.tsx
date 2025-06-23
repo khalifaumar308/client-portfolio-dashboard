@@ -26,6 +26,11 @@ const sidebarItems = [
     icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
+    title: "Hero",
+    href: "/admin/hero",
+    icon: <Home className="h-5 w-5" />,
+  },
+  {
     title: "Events",
     href: "/admin/events",
     icon: <Calendar className="h-5 w-5" />,
@@ -49,11 +54,6 @@ const sidebarItems = [
     title: "Testimonials",
     href: "/admin/testimonials",
     icon: <MessageSquare className="h-5 w-5" />,
-  },
-  {
-    title: "Homepage",
-    href: "/admin/homepage",
-    icon: <Home className="h-5 w-5" />,
   },
 ]
 

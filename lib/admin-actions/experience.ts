@@ -1,37 +1,52 @@
-import Experience from '../models/Experience'
-import mongoose from 'mongoose'
+'use server'
+import { revalidatePath } from 'next/cache'
+import { connectToMongoDB } from '../models/connectDB'
+import Experience, { IExperience } from '../models/Experience'
+import { redirect } from 'next/navigation'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/porpolio'
-
-async function dbConnect() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI)
-  }
-}
+export type ExperienceUpdate = IExperience & { _id?: string }
 
 export async function getAllExperiences() {
-  await dbConnect()
-  return Experience.find().lean()
+  await connectToMongoDB()
+  const exps = await Experience.find().lean()
+  return JSON.parse(JSON.stringify(exps)) as ExperienceUpdate[]
 }
 
 export async function getExperienceById(id: string) {
-  await dbConnect()
-  return Experience.findById(id).lean()
+  await connectToMongoDB()
+  const experiance = await Experience.findById(id).lean()
+  return JSON.parse(JSON.stringify(experiance)) as ExperienceUpdate
 }
 
-export async function createExperience(data: any) {
-  await dbConnect()
-  const experience = new Experience(data)
+export async function createExperience(prevState: any, formData: FormData) {
+  const eventForm = Object.fromEntries(formData.entries()).experience as string
+  const finalEvent = JSON.parse(eventForm) as ExperienceUpdate
+  if (finalEvent._id) {
+    // If _id exists, update the experience
+    const existingExperience = await Experience.findById(finalEvent._id).lean()
+    if (!existingExperience) {
+      throw new Error(`Experience with id ${finalEvent._id} not found`)
+    }
+    await Experience.findByIdAndUpdate(finalEvent._id, finalEvent, { new: true })
+    revalidatePath('/admin/experience')
+    redirect('/admin/experience')
+    
+  }
+  await connectToMongoDB()
+  const experience = new Experience(finalEvent)
   await experience.save()
-  return experience.toObject()
+  revalidatePath('/admin/experience')
+  redirect('/admin/experience')
+
+  return { success: true }
 }
 
 export async function updateExperience(id: string, data: any) {
-  await dbConnect()
+  await connectToMongoDB()
   return Experience.findByIdAndUpdate(id, data, { new: true }).lean()
 }
 
 export async function deleteExperience(id: string) {
-  await dbConnect()
+  await connectToMongoDB()
   return Experience.findByIdAndDelete(id).lean()
 }

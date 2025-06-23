@@ -1,34 +1,36 @@
-import { getExperiences } from "@/lib/api"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ExperienceCard } from "@/components/experience-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import dynamic from "next/dynamic"
-import type { LucideIcon } from "lucide-react"
-import type { ReactNode } from "react"
-
-// Dynamically import Lucide icons
-const iconComponents: Record<string, LucideIcon> = {
-  Briefcase: dynamic(() => import("lucide-react").then((mod) => mod.Briefcase)),
-  Building: dynamic(() => import("lucide-react").then((mod) => mod.Building)),
-  BookOpen: dynamic(() => import("lucide-react").then((mod) => mod.BookOpen)),
-  Award: dynamic(() => import("lucide-react").then((mod) => mod.Award)),
-  Globe: dynamic(() => import("lucide-react").then((mod) => mod.Globe)),
-  Handshake: dynamic(() => import("lucide-react").then((mod) => mod.Handshake)),
-  // Add more icons as needed
-}
+import {
+  ArrowRight,
+  Award,
+  BookOpen,
+  Briefcase,
+  Building,
+  GraduationCap,
+  Handshake,
+  Globe,
+  Scale,
+  Lightbulb,
+} from "lucide-react"
+import { getAllExperiences } from "@/lib/admin-actions/experience"
 
 export async function HomepageExperience() {
-  const experiences = await getExperiences()
-
-  const professionalExperiences = experiences.filter((exp) => exp.type === "professional").slice(0, 3)
-  const advisoryExperiences = experiences.filter((exp) => exp.type === "advisory").slice(0, 3)
-
-  const getIconComponent = (iconName: string): ReactNode => {
-    const IconComponent = iconComponents[iconName] || iconComponents.Briefcase
-    return <IconComponent className="h-6 w-6" />
-  }
+  const experiances = await getAllExperiences()
+    // separate experiance by type
+    const professional = experiances.filter(({ type }) => type === 'Professional')
+  const advisory = experiances.filter(({ type }) => type === 'Advisory')
+  console.log(experiances, 'exp')
+    const icons = [
+      <Briefcase key='0' className="h-6 w-6" />,
+      <Building key='1' className="h-6 w-6" />,
+      <BookOpen key='2' className="h-6 w-6" />,
+      <GraduationCap key='3' className="h-6 w-6" />,
+      <Globe key='4' className="h-6 w-6" />,
+      <Scale key='5' className="h-6 w-6" />,
+      <Lightbulb key='6' className="h-6 w-6" />,
+    ]
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -48,26 +50,26 @@ export async function HomepageExperience() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="professional" className="space-y-8">
-          {professionalExperiences.map((experience) => (
+          {professional.map((experience) => (
             <ExperienceCard
-              key={experience.id}
-              title={experience.title}
+              key={experience._id}
+              title={experience.role}
               company={experience.company}
               period={experience.period}
-              description={experience.description}
-              icon={getIconComponent(experience.icon)}
+              description={experience.description || ''}
+              icon={icons[Math.round(Math.random()*7)]}
             />
           ))}
         </TabsContent>
         <TabsContent value="advisory" className="space-y-8">
-          {advisoryExperiences.map((experience) => (
+          {advisory.map((experience) => (
             <ExperienceCard
-              key={experience.id}
-              title={experience.title}
+              key={experience._id}
+              title={experience.role}
               company={experience.company}
               period={experience.period}
-              description={experience.description}
-              icon={getIconComponent(experience.icon)}
+              description={experience.description || ''}
+              icon={icons[Math.round(Math.random() * 7)]}
             />
           ))}
         </TabsContent>

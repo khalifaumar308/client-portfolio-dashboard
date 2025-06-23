@@ -19,6 +19,7 @@ import { ExperienceCard } from "@/components/experience-card"
 import { ProjectCard } from "@/components/project-card"
 import { TestimonialCard } from "@/components/testimonial-card"
 import { SkillBar } from "@/components/skill-bar"
+import { getAllExperiences } from "@/lib/admin-actions/experience"
 
 export const metadata = {
   title: "Experience | Samuel Johnson",
@@ -26,7 +27,20 @@ export const metadata = {
     "Explore Samuel Johnson's professional experience, key projects, and expertise in fintech consulting and business advisory.",
 }
 
-export default function ExperiencePage() {
+export default async function ExperiencePage() {
+  const experiances = await getAllExperiences()
+  // separate experiance by type
+  const professional = experiances.filter(({ type }) => type === 'Professional')
+  const advisory = experiances.filter(({ type }) => type === 'Advisory')
+  const icons = [
+    <Briefcase key='0' className="h-6 w-6" />,
+    <Building key='1' className="h-6 w-6" />,
+    <BookOpen key='2' className="h-6 w-6" />,
+    <GraduationCap key='3' className="h-6 w-6" />,
+    <Globe key='4' className="h-6 w-6" />,
+    <Scale key='5' className="h-6 w-6" />,
+    <Lightbulb key='6' className="h-6 w-6" />,
+  ]
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -78,7 +92,17 @@ export default function ExperiencePage() {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="professional" className="space-y-8">
-                <ExperienceCard
+                {professional.map(({role, description, period, company},id) => (
+                  <ExperienceCard
+                    title={role}
+                    company={company}
+                    period={period}
+                    description={description || ''}
+                    icon={icons[Math.round(Math.random() * 7)]}
+                    key={id}
+                  />
+                ))}
+                {/* <ExperienceCard
                   title="Principal Consultant"
                   company="StartUps Consulting"
                   period="Oct 2024 - Present"
@@ -105,10 +129,20 @@ export default function ExperiencePage() {
                   period="Jun 2014 - Feb 2017"
                   description="Provided legal advisory services on financial regulations, participated in the development of payment systems policies, and supported the implementation of financial inclusion initiatives."
                   icon={<Scale className="h-6 w-6" />}
-                />
+                /> */}
               </TabsContent>
               <TabsContent value="advisory" className="space-y-8">
-                <ExperienceCard
+                {advisory.map(({ role, description, period, company }, id) => (
+                  <ExperienceCard
+                    title={role}
+                    company={company}
+                    period={period}
+                    description={description || ''}
+                    icon={icons[Math.round(Math.random() * 7)]}
+                    key={id}
+                  />
+                ))}
+                {/* <ExperienceCard
                   title="Governing Council Member"
                   company="Fintech Association Of Nigeria"
                   period="Oct 2024 - Present"
@@ -135,7 +169,7 @@ export default function ExperiencePage() {
                   period="Jan 2022 - Present"
                   description="Mentoring early-stage fintech startups on regulatory compliance, business model development, and fundraising strategies as part of Lagos State's innovation support program."
                   icon={<Lightbulb className="h-6 w-6" />}
-                />
+                /> */}
               </TabsContent>
             </Tabs>
           </div>

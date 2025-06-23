@@ -16,6 +16,7 @@ import { HomepageBlogPosts } from "@/components/homepage-blog-posts"
 import { getHomepageData } from "@/lib/api"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { getHero } from "@/lib/admin-actions/hero"
 
 export const metadata = {
   title: "Samuel Johnson | Fintech Consultant & Business Advisor",
@@ -47,7 +48,13 @@ export const metadata = {
 
 export default async function Home() {
   const homepageData = await getHomepageData()
-
+  const hero = await getHero()
+  if (!hero) {
+    return <div className="container mx-auto px-4 py-20">Loading...</div>
+  }
+  // get the last word of hero heading
+  const lastWord = hero.heading.split(" ").pop() || ""
+  const headingWithoutLastWord = hero.heading.replace(new RegExp(`\\b${lastWord}\\b$`), "").trim()
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -58,15 +65,15 @@ export default async function Home() {
           <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px] items-center">
             <div className="flex flex-col justify-center space-y-6">
               <div className="inline-flex items-center px-3 py-1 text-sm font-medium text-primary bg-primary/10 rounded-full">
-                Fintech Consultant & Business Advisor
+                {hero?.title || 'Fintech Consultant & Business Advisor'}
               </div>
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none">
-                  {homepageData.hero.title}{" "}
-                  <span className="text-primary">{homepageData.hero.subtitle}</span>
+                  {headingWithoutLastWord}{" "}
+                  <span className="text-primary">{lastWord}</span>
                 </h1>
                 <p className="max-w-[600px] text-muted-foreground text-lg md:text-xl">
-                  {homepageData.hero.description}
+                  {hero.subText}
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
@@ -80,7 +87,7 @@ export default async function Home() {
                 </Button>
               </div>
               <div className="pt-4">
-                <SocialLinks className="flex gap-5" />
+                <SocialLinks socials={hero.socialMediaLinks} className="flex gap-5" />
               </div>
             </div>
             <div className="relative mx-auto lg:mx-0">
@@ -90,7 +97,7 @@ export default async function Home() {
                   alt="Samuel Johnson"
                   className="object-cover"
                   fill
-                  src="/placeholder.svg?height=400&width=400"
+                  src={hero.imageUrl || "/placeholder.svg"}
                   priority
                 />
               </div>
@@ -325,7 +332,7 @@ export default async function Home() {
                   </div>
                   <div className="pt-4">
                     <h3 className="text-lg font-bold mb-3">Connect With Me</h3>
-                    <SocialLinks className="flex gap-4" />
+                    <SocialLinks socials={hero.socialMediaLinks} className="flex gap-4" />
                   </div>
                 </div>
               </div>

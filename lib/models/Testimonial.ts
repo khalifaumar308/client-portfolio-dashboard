@@ -1,10 +1,17 @@
 import mongoose from 'mongoose'
 
-const TestimonialSchema = new mongoose.Schema({
+export interface ITestimonial {
+  name: string;
+  role: string;
+  image?: string;
+  quote: string;
+}
+
+const TestimonialSchema = new mongoose.Schema<ITestimonial>({
   name: { type: String, required: true },
-  company: { type: String },
+  role: { type: String },
   quote: { type: String, required: true },
-  avatar: { type: String }, // URL or path
+  image: { type: String }, // URL or path
 })
 
-export default mongoose.models.Testimonial || mongoose.model('Testimonial', TestimonialSchema)
+export default mongoose.models.Testimonial || mongoose.model<ITestimonial>('Testimonial', TestimonialSchema)

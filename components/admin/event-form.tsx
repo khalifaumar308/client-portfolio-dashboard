@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { NewEvent } from "@/lib/models/Event"
 import UploadImage from "./UploadImage"
 import { addEvent } from "@/lib/admin-actions/event"
-import { useFormStatus } from "react-dom"
 
 interface EventType {
   name: string
