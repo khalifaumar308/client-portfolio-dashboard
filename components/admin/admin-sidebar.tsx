@@ -14,6 +14,7 @@ import {
   BarChart,
   Settings,
   ImageIcon,
+  CaptionsIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -54,6 +55,11 @@ const sidebarItems = [
     title: "Testimonials",
     href: "/admin/testimonials",
     icon: <MessageSquare className="h-5 w-5" />,
+  },
+  {
+    title: "Credentials",
+    href: "/admin/credentials",
+    icon: <CaptionsIcon className="h-5 w-5" />,
   },
 ]
 

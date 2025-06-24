@@ -33,10 +33,9 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="flex min-h-screen flex-col">
-          <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <div className = { inter.className } >
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden">
@@ -115,8 +114,7 @@ export default function AdminLayout({
               {children}
             </main>
           </div>
-        </div>
-      </body>
-    </html>
+      </div>
+    </div>
   )
 }

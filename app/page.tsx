@@ -61,7 +61,7 @@ export default async function Home() {
   const headingWithoutLastWord = heading.replace(new RegExp(`\\b${lastWord}\\b$`), "").trim()
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* <Header /> */}
       {/* Hero Section */}
       <section className="relative w-full py-20 md:py-28 lg:py-36 overflow-hidden">
         <AnimatedGradient />
@@ -419,7 +419,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

@@ -22,11 +22,12 @@ interface ExperienceFormProps {
   editMode?: boolean;
 }
 
-const defaultExperience = {
+const defaultExperience:ExperienceUpdate = {
   company: "",
   role: "",
   period: "",
   description: "",
+  type:'Professional'
 };
 
 export function ExperienceForm({ experience, editMode }: ExperienceFormProps) {
