@@ -22,6 +22,9 @@ import { SkillBar } from "@/components/skill-bar";
 import { getAllExperiences } from "@/lib/admin-actions/experience";
 import { getCredentails } from "@/lib/admin-actions/credentails";
 import { TimelineItem } from "@/components/timeline-item";
+import { getProjects } from "@/lib/admin-actions/project-actions";
+import { getAllTestimonials } from "@/lib/admin-actions/testimonial";
+import { getCapabilities } from "@/lib/admin-actions/capability-actions";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
@@ -33,9 +36,19 @@ export const metadata = {
 export default async function ExperiencePage() {
   // const experiances = await getAllExperiences();
   // const credentials = await getCredentails();
-  const [experiances, credentials] = await Promise.all([getAllExperiences(), getCredentails()])
-    const education = Array.isArray(credentials.education) ? credentials.education : [];
-    const certification = Array.isArray(credentials.certification) ? credentials.certification : [];
+  const [experiances, credentials, projects, testimonials, capabilities] = await Promise.all([
+    getAllExperiences(),
+    getCredentails(),
+    getProjects(),
+    getAllTestimonials(),
+    getCapabilities(),
+  ]);
+  const education = Array.isArray(credentials.education)
+    ? credentials.education
+    : [];
+  const certification = Array.isArray(credentials.certification)
+    ? credentials.certification
+    : [];
   // separate experiance by type
   const professional = experiances.filter(
     ({ type }) => type === "Professional"
@@ -164,9 +177,8 @@ export default async function ExperiencePage() {
                     period={item.period}
                     description={item.details}
                     key={idx}
-                  /> 
+                  />
                 ))}
-                
               </div>
             </div>
 
@@ -205,7 +217,17 @@ export default async function ExperiencePage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <ProjectCard
+            {projects.map((project) => (
+              <ProjectCard
+                key={project._id}
+                title={project.title}
+                description={project.description}
+                image={project.image}
+                tags={project.tags}
+                link={`/projects/${project._id}`}
+              />
+            ))}
+            {/* <ProjectCard
               title="Regulatory Framework Development"
               description="Developed a comprehensive regulatory compliance framework for a digital banking startup, enabling successful licensing in three West African countries."
               image="/placeholder.svg?height=200&width=300"
@@ -246,7 +268,7 @@ export default async function ExperiencePage() {
               image="/placeholder.svg?height=200&width=300"
               tags={["Inclusion", "Mobile Money", "Rural"]}
               link="/projects/financial-inclusion"
-            />
+            /> */}
           </div>
         </div>
       </section>
@@ -267,14 +289,22 @@ export default async function ExperiencePage() {
           </div>
 
           <div className="mx-auto max-w-3xl space-y-6">
-            <SkillBar skill="Regulatory Compliance" percentage={95} />
-            <SkillBar skill="Business Strategy" percentage={90} />
+            {capabilities.map((cap) => (
+              <SkillBar
+                key={cap._id}
+                skill={cap.title}
+                percentage={cap.percentage}
+              />
+            ))}
+            {/* Example SkillBars, uncomment to use
+            {/* <SkillBar skill="Regulatory Compliance" percentage={95} /> */}
+            {/* <SkillBar skill="Business Strategy" percentage={90} />
             <SkillBar skill="Legal Advisory" percentage={92} />
             <SkillBar skill="Risk Management" percentage={88} />
             <SkillBar skill="Partnership Development" percentage={85} />
             <SkillBar skill="Fundraising" percentage={80} />
             <SkillBar skill="Corporate Governance" percentage={90} />
-            <SkillBar skill="Market Entry Strategy" percentage={85} />
+            <SkillBar skill="Market Entry Strategy" percentage={85} /> */}
           </div>
         </div>
       </section>
@@ -295,7 +325,16 @@ export default async function ExperiencePage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            <TestimonialCard
+            {testimonials.map((testimonial) => (
+              <TestimonialCard
+                key={testimonial._id}
+                quote={testimonial.quote}
+                name={testimonial.name}
+                title={testimonial.role}
+                image={testimonial.image || "/placeholder.svg?height=100&width=100"}
+              />
+            ))}
+            {/* <TestimonialCard
               quote="Samuel's expertise in regulatory compliance was instrumental in helping us secure our fintech license in record time. His guidance throughout the process was invaluable."
               name="Aisha Mohammed"
               title="CEO, PayTech Solutions"
@@ -312,7 +351,7 @@ export default async function ExperiencePage() {
               name="Sarah Chen"
               title="COO, GlobalPay Africa"
               image="/placeholder.svg?height=100&width=100"
-            />
+            /> */}
           </div>
         </div>
       </section>

@@ -61,7 +61,18 @@ const sidebarItems = [
     href: "/admin/credentials",
     icon: <CaptionsIcon className="h-5 w-5" />,
   },
+  {
+    title: "Projects",
+    href: "/admin/projects",
+    icon: <Award className="h-5 w-5" />,
+  },
+  {
+    title: "Capabilities",
+    href: "/admin/capabilities",
+    icon: <Briefcase className="h-5 w-5" />,
+  },
 ]
+
 
 export function AdminSidebar() {
   const pathname = usePathname()
