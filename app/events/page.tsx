@@ -19,8 +19,8 @@ import { getAllEvents } from "@/lib/admin-actions/event"
 import { EventFiltersClient } from "@/components/event-filter-client"
 
 export const metadata = {
-  title: "Events & Speaking | Samuel Johnson",
-  description: "Explore Samuel Johnson's speaking engagements, workshops, and industry events in the fintech space.",
+  title: "Events & Speaking | Abiola Jimoh",
+  description: "Explore Abiola Jimoh's speaking engagements, workshops, and industry events in the fintech space.",
 }
 
 export default async function EventsPage() {

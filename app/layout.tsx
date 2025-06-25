@@ -9,11 +9,11 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: {
-    default: "Samuel Johnson | Fintech Consultant & Business Advisor",
-    template: "%s | Samuel Johnson",
+    default: "Abiola Jimoh | Fintech Consultant & Business Advisor",
+    template: "%s | Abiola Jimoh",
   },
   description:
-    "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+    "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
   keywords: [
     "fintech consultant",
     "business advisor",
@@ -23,16 +23,16 @@ export const metadata = {
     "risk evaluation",
     "legal advisory",
   ],
-  authors: [{ name: "Samuel Johnson" }],
-  creator: "Samuel Johnson",
+  authors: [{ name: "Abiola Jimoh" }],
+  creator: "Abiola Jimoh",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://samueljohnson.com",
-    title: "Samuel Johnson | Fintech Consultant & Business Advisor",
+    title: "Abiola Jimoh | Fintech Consultant & Business Advisor",
     description:
-      "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
-    siteName: "Samuel Johnson",
+      "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+    siteName: "Abiola Jimoh",
   },
   robots: {
     index: true,
@@ -57,7 +57,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              name: "Samuel Johnson",
+              name: "Abiola Jimoh",
               url: "https://samueljohnson.com",
               jobTitle: "Fintech Consultant & Business Advisor",
               sameAs: [

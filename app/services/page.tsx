@@ -22,7 +22,7 @@ import { getAllServices } from "@/lib/admin-actions/service.action"
 import { iconOptions } from "@/components/iconOptions"
 
 export const metadata = {
-  title: "Services | Samuel Johnson",
+  title: "Services | Abiola Jimoh",
   description:
     "Comprehensive fintech consulting services including regulatory compliance, business development, fundraising support, and legal advisory.",
 }

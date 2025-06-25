@@ -21,9 +21,9 @@ import { ValueCard } from "@/components/value-card"
 import { TimelineItem } from "@/components/timeline-item"
 
 export const metadata = {
-  title: "About Me | Samuel Johnson",
+  title: "About Me | Abiola Jimoh",
   description:
-    "Learn more about Samuel Johnson's background, expertise, and professional journey in fintech consulting and business advisory.",
+    "Learn more about Abiola Jimoh's background, expertise, and professional journey in fintech consulting and business advisory.",
 }
 
 export default function AboutPage() {
@@ -39,7 +39,7 @@ export default function AboutPage() {
                 About Me
               </div>
               <div className="space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none">Samuel Johnson</h1>
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none">Abiola Jimoh</h1>
                 <p className="text-xl text-primary font-medium">Fintech Consultant & Business Advisor</p>
                 <p className="max-w-[600px] text-muted-foreground text-lg">
                   With over a decade of experience in fintech and regulatory compliance, I help businesses navigate
@@ -64,7 +64,7 @@ export default function AboutPage() {
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-primary/5 blur-3xl" />
               <div className="relative aspect-square max-w-[400px] overflow-hidden rounded-full border-8 border-background shadow-xl">
                 <Image
-                  alt="Samuel Johnson"
+                  alt="Abiola Jimoh"
                   className="object-cover"
                   fill
                   src="/placeholder.svg?height=400&width=400"

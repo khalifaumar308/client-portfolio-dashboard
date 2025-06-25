@@ -13,7 +13,7 @@ export function Footer() {
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                 <Briefcase className="h-5 w-5 text-primary" />
               </div>
-              <span className="text-lg">Samuel Johnson</span>
+              <span className="text-lg">Abiola Jimoh</span>
             </Link>
             <p className="text-muted-foreground">
               Seasoned fintech consultant with over a decade of experience helping businesses navigate regulatory
@@ -126,7 +126,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t pt-8 mt-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Samuel Johnson. All rights reserved.
+            &copy; {new Date().getFullYear()} Abiola Jimoh. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">Fintech Consultant & Business Advisor</p>
         </div>

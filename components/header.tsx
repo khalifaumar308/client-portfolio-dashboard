@@ -46,7 +46,7 @@ export function Header() {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
             <Briefcase className="h-5 w-5 text-primary" />
           </div>
-          <span className="text-lg">Samuel Johnson</span>
+          <span className="text-lg">Abiola Jimoh</span>
         </Link>
         <nav className="hidden md:flex gap-1">
           {routes.map((route) => (

@@ -35,13 +35,13 @@ export function FeaturedBlogPost({ post }: FeaturedBlogPostProps) {
             <div className="relative h-10 w-10 overflow-hidden rounded-full">
               <Image
                 src={"/placeholder.svg?height=40&width=40"}
-                alt={ "Samuel Johnson"}
+                alt={ "Abiola Jimoh"}
                 fill
                 className="object-cover"
               />
             </div>
             <div>
-              <p className="text-sm font-medium">{ "Samuel Johnson"}</p>
+              <p className="text-sm font-medium">{ "Abiola Jimoh"}</p>
               <p className="text-xs text-muted-foreground">{post.date}</p>
             </div>
           </div>

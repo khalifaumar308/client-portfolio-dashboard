@@ -291,10 +291,10 @@ export const mockFeaturedBlogPost: BlogPost = {
   category: "Regulation",
   readTime: "8 min read",
   author: {
-    name: "Samuel Johnson",
+    name: "Abiola Jimoh",
     title: "Fintech Consultant & Business Advisor",
     image: "/placeholder.svg?height=100&width=100",
-    bio: "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+    bio: "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
   },
   tags: ["Fintech", "Regulation", "Africa", "Innovation", "Compliance"],
 }

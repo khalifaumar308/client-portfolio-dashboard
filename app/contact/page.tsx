@@ -7,8 +7,8 @@ import { SocialLinks } from "@/components/social-links"
 import { ContactForm } from "@/components/contact-form"
 
 export const metadata = {
-  title: "Contact | Samuel Johnson",
-  description: "Get in touch with Samuel Johnson for fintech consulting and business advisory services.",
+  title: "Contact | Abiola Jimoh",
+  description: "Get in touch with Abiola Jimoh for fintech consulting and business advisory services.",
 }
 
 export default function ContactPage() {

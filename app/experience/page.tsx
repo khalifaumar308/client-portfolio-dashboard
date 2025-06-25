@@ -28,9 +28,9 @@ import { getCapabilities } from "@/lib/admin-actions/capability-actions";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Experience | Samuel Johnson",
+  title: "Experience | Abiola Jimoh",
   description:
-    "Explore Samuel Johnson's professional experience, key projects, and expertise in fintech consulting and business advisory.",
+    "Explore Abiola Jimoh's professional experience, key projects, and expertise in fintech consulting and business advisory.",
 };
 
 export default async function ExperiencePage() {

@@ -22,13 +22,13 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = {
-  title: "Samuel Johnson | Fintech Consultant & Business Advisor",
+  title: "Abiola Jimoh | Fintech Consultant & Business Advisor",
   description:
-    "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+    "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
   openGraph: {
-    title: "Samuel Johnson | Fintech Consultant & Business Advisor",
+    title: "Abiola Jimoh | Fintech Consultant & Business Advisor",
     description:
-      "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+      "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
     type: "website",
     url: "https://samueljohnson.com",
     images: [
@@ -36,15 +36,15 @@ export const metadata = {
         url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Samuel Johnson",
+        alt: "Abiola Jimoh",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Samuel Johnson | Fintech Consultant & Business Advisor",
+    title: "Abiola Jimoh | Fintech Consultant & Business Advisor",
     description:
-      "Samuel Johnson is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
+      "Abiola Jimoh is a seasoned fintech consultant with over a decade of experience in regulatory compliance, business growth, and strategic partnerships.",
     images: ["/images/og-image.jpg"],
   },
 }
@@ -98,7 +98,7 @@ export default async function Home() {
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-primary/5 blur-3xl" />
               <div className="relative aspect-square max-w-[400px] overflow-hidden rounded-full border-8 border-background shadow-xl">
                 <Image
-                  alt="Samuel Johnson"
+                  alt="Abiola Jimoh"
                   className="object-cover"
                   fill
                   src={hero.imageUrl || "/placeholder.svg"}

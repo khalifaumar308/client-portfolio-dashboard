@@ -16,7 +16,7 @@ import { getBlogCategories, getFeaturedBlogPost } from "@/lib/api"
 import { getAllBlogPosts } from "@/lib/admin-actions/blogPost"
 
 export const metadata = {
-  title: "Blog | Samuel Johnson",
+  title: "Blog | Abiola Jimoh",
   description: "Insights and articles on fintech, regulatory compliance, and business growth strategies.",
 }
 

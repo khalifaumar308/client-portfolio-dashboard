@@ -23,8 +23,8 @@ import "@/app/globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Admin Dashboard | Samuel Johnson",
-  description: "Content Management System for Samuel Johnson's personal website",
+  title: "Admin Dashboard | Abiola Jimoh",
+  description: "Content Management System for Abiola Jimoh's personal website",
 }
 
 export default function AdminLayout({
@@ -54,7 +54,7 @@ export default function AdminLayout({
             </Sheet>
             <Link href="/admin" className="flex items-center gap-2 font-semibold">
               <User className="h-5 w-5" />
-              <span>Samuel Johnson CMS</span>
+              <span>Abiola Jimoh CMS</span>
             </Link>
             <div className="ml-auto flex items-center gap-4">
               <DropdownMenu>
