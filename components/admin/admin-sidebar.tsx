@@ -71,6 +71,11 @@ const sidebarItems = [
     href: "/admin/capabilities",
     icon: <Briefcase className="h-5 w-5" />,
   },
+  {
+    title: "About Me",
+    href: "/admin/about",
+    icon: <Award className="h-5 w-5" />,
+  },
 ]
 
 

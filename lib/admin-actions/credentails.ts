@@ -16,10 +16,10 @@ export const getCredentails = async () => {
     Credentials.find({ type: "Certification" }),
   ]);
   return {
-    education: JSON.parse(JSON.stringify(education)) as CredentailsUpdate,
+    education: JSON.parse(JSON.stringify(education)) as CredentailsUpdate[],
     certification: JSON.parse(
       JSON.stringify(certification)
-    ) as CredentailsUpdate,
+    ) as CredentailsUpdate[],
   };
 };
 

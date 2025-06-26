@@ -12,10 +12,6 @@ import {
   Target,
   Users,
 } from "lucide-react"
-import { getHero } from "@/lib/admin-actions/hero"
-import { getCredentails } from "@/lib/admin-actions/credentails"
-import { getCapabilities } from "@/lib/admin-actions/capability-actions"
-import { getAbout } from "@/lib/admin-actions/about-actions"
 
 import { Button } from "@/components/ui/button"
 import { SocialLinks } from "@/components/social-links"
@@ -23,7 +19,12 @@ import { AnimatedGradient } from "@/components/animated-gradient"
 import { SkillBar } from "@/components/skill-bar"
 import { ValueCard } from "@/components/value-card"
 import { TimelineItem } from "@/components/timeline-item"
-
+import { getHero } from "@/lib/admin-actions/hero"
+import { getCredentails } from "@/lib/admin-actions/credentails"
+import { getCapabilities } from "@/lib/admin-actions/capability-actions"
+import { getAbout } from "@/lib/admin-actions/about-actions"
+import { AboutForm } from "@/components/admin/about-form"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 export const dynamic = "force-dynamic";
 
 
@@ -35,13 +36,27 @@ export const metadata = {
 
 export default async function AboutPage() {
   const [hero, credentails, capabilities, about] = await Promise.all([
-      getHero(),
-      getCredentails(),
-      getCapabilities(),
-      getAbout()
-    ])
+    getHero(),
+    getCredentails(),
+    getCapabilities(),
+    getAbout()
+  ])
+  console.log(about, 'about')
   return (
     <div className="flex flex-col min-h-screen">
+      <div className="flex justify-end p-4">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Edit About Page</Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl w-full">
+            <DialogHeader>
+              <DialogTitle>Edit About Page Content</DialogTitle>
+            </DialogHeader>
+            <AboutForm about={about} />
+          </DialogContent>
+        </Dialog>
+      </div>
       {/* Hero Section */}
       <section className="relative w-full py-20 md:py-28 overflow-hidden">
         <AnimatedGradient />
@@ -53,7 +68,7 @@ export default async function AboutPage() {
               </div>
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none">Abiola Jimoh</h1>
-                <p className="text-xl text-primary font-medium">{hero.title}</p>
+                <p className="text-xl text-primary font-medium">{ hero.title }</p>
                 <p className="max-w-[600px] text-muted-foreground text-lg">
                   {hero.subText}
                 </p>
@@ -169,7 +184,7 @@ export default async function AboutPage() {
                 description={cred.details}
               />
             ))}
-
+            
           </div>
         </div>
       </section>
